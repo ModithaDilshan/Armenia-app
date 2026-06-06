@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "740572654649",
+    "project_id": "armenia-lanka-edu",
+    "storage_bucket": "armenia-lanka-edu.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:740572654649:android:1578472b67a019d91c71e8",
+        "android_client_info": {
+          "package_name": "com.armenia.lanka.edu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEXleTDHOGHYeYra3Q_Uey0slxfdyy24M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
