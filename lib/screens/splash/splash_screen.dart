@@ -70,14 +70,16 @@ class _SplashScreenState extends State<SplashScreen>
             Positioned(
               top: -100,
               right: -50,
-              child: _buildAmbientGlow(AppColors.primary.withOpacity(0.15), 300),
+              child:
+                  _buildAmbientGlow(AppColors.primary.withOpacity(0.15), 300),
             ),
             Positioned(
               bottom: -50,
               left: -100,
-              child: _buildAmbientGlow(AppColors.neonPurple.withOpacity(0.15), 300),
+              child: _buildAmbientGlow(
+                  AppColors.neonPurple.withOpacity(0.15), 300),
             ),
-            
+
             // Content
             Center(
               child: Column(
@@ -117,7 +119,7 @@ class _SplashScreenState extends State<SplashScreen>
                 ],
               ),
             ),
-            
+
             // Bottom Loading
             Positioned(
               bottom: 60,
@@ -142,7 +144,8 @@ class _SplashScreenState extends State<SplashScreen>
                         decoration: BoxDecoration(
                           color: context.dc.surfaceHighlight,
                           shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.primary.withOpacity(0.5)),
+                          border: Border.all(
+                              color: AppColors.primary.withOpacity(0.5)),
                         ),
                         child: const CircularProgressIndicator(
                           color: AppColors.primary,

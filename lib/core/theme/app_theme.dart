@@ -95,8 +95,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.surface,
-        labelStyle: GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 14),
-        hintStyle: GoogleFonts.plusJakartaSans(color: AppColors.textMuted.withOpacity(0.5), fontSize: 14),
+        labelStyle: GoogleFonts.plusJakartaSans(
+            color: AppColors.textMuted, fontSize: 14),
+        hintStyle: GoogleFonts.plusJakartaSans(
+            color: AppColors.textMuted.withOpacity(0.5), fontSize: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
@@ -131,7 +133,8 @@ class AppTheme {
         tertiary: AppColors.tertiary,
         surface: Color(0xFFFFFFFF),
       ),
-      textTheme: GoogleFonts.plusJakartaSansTextTheme(ThemeData.light().textTheme),
+      textTheme:
+          GoogleFonts.plusJakartaSansTextTheme(ThemeData.light().textTheme),
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -151,20 +154,33 @@ class AppTheme {
           foregroundColor: Colors.white,
           elevation: 4,
           shadowColor: AppColors.primary.withOpacity(0.3),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          textStyle: GoogleFonts.plusJakartaSans(fontSize: 16, fontWeight: FontWeight.w700, letterSpacing: 0.2),
+          textStyle: GoogleFonts.plusJakartaSans(
+              fontSize: 16, fontWeight: FontWeight.w700, letterSpacing: 0.2),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: const Color(0xFFEEEEF8),
-        labelStyle: GoogleFonts.plusJakartaSans(color: const Color(0xFF606070), fontSize: 14),
-        hintStyle: GoogleFonts.plusJakartaSans(color: const Color(0xFF909090), fontSize: 14),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFFDDDDEE))),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFFDDDDEE))),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: AppColors.primary, width: 1.5)),
-        errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: AppColors.tertiary, width: 1.5)),
+        labelStyle: GoogleFonts.plusJakartaSans(
+            color: const Color(0xFF606070), fontSize: 14),
+        hintStyle: GoogleFonts.plusJakartaSans(
+            color: const Color(0xFF909090), fontSize: 14),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFDDDDEE))),
+        enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFDDDDEE))),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: AppColors.primary, width: 1.5)),
+        errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide:
+                const BorderSide(color: AppColors.tertiary, width: 1.5)),
         contentPadding: const EdgeInsets.all(20),
       ),
     );

@@ -12,9 +12,12 @@ import '../../models/university_model.dart';
 import '../universities/university_detail_screen.dart';
 import '../../services/firestore_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../notifications/notifications_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final ValueChanged<int>? onNavigate;
+
+  const HomeScreen({super.key, this.onNavigate});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -51,37 +54,61 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   final List<Map<String, dynamic>> _whyArmeniaPoints = [
-    {'icon': Icons.medical_services_rounded, 'title': 'WHO Listed', 'desc': 'Globally recognized', 'color': AppColors.primary},
-    {'icon': Icons.language_rounded, 'title': 'English', 'desc': 'No language barrier', 'color': AppColors.secondary},
-    {'icon': Icons.attach_money_rounded, 'title': 'Affordable', 'desc': 'Low living cost', 'color': AppColors.tertiary},
-    {'icon': Icons.verified_rounded, 'title': 'No IELTS', 'desc': 'Easy admission', 'color': const Color(0xFF00E676)},
-    {'icon': Icons.flight_takeoff_rounded, 'title': 'Easy Visa', 'desc': 'Full support', 'color': AppColors.neonPurple},
-    {'icon': Icons.groups_rounded, 'title': 'Community', 'desc': 'Lankan students', 'color': const Color(0xFFFF3D00)},
+    {
+      'icon': Icons.medical_services_rounded,
+      'title': 'WHO Listed',
+      'desc': 'Globally recognized',
+      'color': AppColors.primary
+    },
+    {
+      'icon': Icons.language_rounded,
+      'title': 'English',
+      'desc': 'No language barrier',
+      'color': AppColors.secondary
+    },
+    {
+      'icon': Icons.attach_money_rounded,
+      'title': 'Affordable',
+      'desc': 'Low living cost',
+      'color': AppColors.tertiary
+    },
+    {
+      'icon': Icons.verified_rounded,
+      'title': 'No IELTS',
+      'desc': 'Easy admission',
+      'color': const Color(0xFF00E676)
+    },
+    {
+      'icon': Icons.flight_takeoff_rounded,
+      'title': 'Easy Visa',
+      'desc': 'Full support',
+      'color': AppColors.neonPurple
+    },
+    {
+      'icon': Icons.groups_rounded,
+      'title': 'Community',
+      'desc': 'Lankan students',
+      'color': const Color(0xFFFF3D00)
+    },
   ];
 
   void _launchWhatsApp() async {
-    final uri = Uri.parse('https://wa.me/94702821035?text=Hello%2C%20I%20am%20interested%20in%20studying%20in%20Armenia');
-    if (await canLaunchUrl(uri)) launchUrl(uri, mode: LaunchMode.externalApplication);
-  }
-
-  void _launchWhatsApp2() async {
-    final uri = Uri.parse('https://wa.me/94741190119?text=Hello%2C%20I%20am%20interested%20in%20studying%20in%20Armenia');
-    if (await canLaunchUrl(uri)) launchUrl(uri, mode: LaunchMode.externalApplication);
+    final uri = Uri.parse(
+        'https://wa.me/94778200056?text=Hello%2C%20I%20am%20interested%20in%20studying%20in%20Armenia');
+    if (await canLaunchUrl(uri)) {
+      launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   void _launchFacebook() async {
-    final fbAppUri = Uri.parse('fb://facewebmodal/f?href=https://www.facebook.com/share/17kEMmU4fu/');
+    final fbAppUri = Uri.parse(
+        'fb://facewebmodal/f?href=https://www.facebook.com/share/17kEMmU4fu/');
     final fbWebUri = Uri.parse('https://www.facebook.com/share/17kEMmU4fu/');
     if (await canLaunchUrl(fbAppUri)) {
       launchUrl(fbAppUri, mode: LaunchMode.externalApplication);
     } else {
       launchUrl(fbWebUri, mode: LaunchMode.externalApplication);
     }
-  }
-
-  void _launchGoogleMeet() async {
-    final uri = Uri.parse('https://meet.google.com');
-    if (await canLaunchUrl(uri)) launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
   @override
@@ -96,14 +123,37 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
-                FadeInDown(duration: const Duration(milliseconds: 600), child: _buildHeroCarousel()),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 200), child: _buildQuickActions()),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 300), child: _buildAnnouncements()),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 400), child: _buildWhyArmenia()),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 500), child: _buildWelcomeMessage()),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 600), child: _buildFeaturedUniversities()),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 700), child: _buildWhatsAppQR()),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 800), child: _buildArmeniaFacts()),
+                FadeInDown(
+                    duration: const Duration(milliseconds: 600),
+                    child: _buildHeroCarousel()),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 200),
+                    child: _buildQuickActions()),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 300),
+                    child: _buildAnnouncements()),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 400),
+                    child: _buildWhyArmenia()),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 500),
+                    child: _buildWelcomeMessage()),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 600),
+                    child: _buildFeaturedUniversities()),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 700),
+                    child: _buildWhatsAppQR()),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 800),
+                    child: _buildArmeniaFacts()),
                 const SizedBox(height: 100),
               ],
             ),
@@ -140,8 +190,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.notifications_outlined, color: AppColors.secondary),
-          onPressed: () {},
+          icon: const Icon(Icons.notifications_outlined,
+              color: AppColors.secondary),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+          ),
           tooltip: 'Notifications',
         ),
       ],
@@ -202,7 +256,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(24),
                       gradient: LinearGradient(
-                        colors: [Colors.black.withOpacity(0.8), Colors.black.withOpacity(0.2)],
+                        colors: [
+                          Colors.black.withOpacity(0.8),
+                          Colors.black.withOpacity(0.2)
+                        ],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                       ),
@@ -238,13 +295,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             foregroundColor: slide['color'] as Color,
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 8),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
                             elevation: 0,
                           ),
-                          onPressed: () {},
+                          onPressed: () => widget.onNavigate?.call(2),
                           child: Text(
                             'Apply Now →',
                             style: GoogleFonts.plusJakartaSans(
@@ -284,7 +342,10 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text(
             'Quick Actions',
-            style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w800, color: context.dc.textMain),
+            style: GoogleFonts.plusJakartaSans(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: context.dc.textMain),
           ),
           const SizedBox(height: 16),
           Row(
@@ -293,7 +354,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: _actionButton(
                   icon: FontAwesomeIcons.whatsapp,
                   label: 'Chat with\nCounselor',
-                  gradient: const LinearGradient(colors: [Color(0xFF25D366), Color(0xFF128C7E)]),
+                  gradient: const LinearGradient(
+                      colors: [Color(0xFF25D366), Color(0xFF128C7E)]),
                   onTap: _launchWhatsApp,
                 ),
               ),
@@ -302,7 +364,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: _actionButton(
                   icon: FontAwesomeIcons.facebookF,
                   label: 'Our\nFacebook',
-                  gradient: const LinearGradient(colors: [Color(0xFF1877F2), Color(0xFF0A4DA8)]),
+                  gradient: const LinearGradient(
+                      colors: [Color(0xFF1877F2), Color(0xFF0A4DA8)]),
                   onTap: _launchFacebook,
                 ),
               ),
@@ -312,7 +375,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Icons.school_rounded,
                   label: 'Apply\nNow',
                   gradient: AppColors.techGradient,
-                  onTap: () {},
+                  onTap: () => widget.onNavigate?.call(2),
                 ),
               ),
             ],
@@ -373,21 +436,26 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text(
             '📢 Announcements',
-            style: GoogleFonts.plusJakartaSans(fontSize: 18, fontWeight: FontWeight.w800, color: context.dc.textMain),
+            style: GoogleFonts.plusJakartaSans(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: context.dc.textMain),
           ),
           const SizedBox(height: 16),
           FutureBuilder<QuerySnapshot>(
             future: FirestoreService().getAnnouncementsStream().first,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+                return const Center(
+                    child: CircularProgressIndicator(color: AppColors.primary));
               }
               if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                 return AppTheme.glassCard(
                   padding: const EdgeInsets.all(20),
                   child: Center(
                     child: Text('No announcements right now.',
-                        style: GoogleFonts.plusJakartaSans(color: context.dc.textMuted)),
+                        style: GoogleFonts.plusJakartaSans(
+                            color: context.dc.textMuted)),
                   ),
                 );
               }
@@ -418,15 +486,14 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 4,
             height: 50,
             decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(4),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withOpacity(0.5),
-                  blurRadius: 8,
-                )
-              ]
-            ),
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withOpacity(0.5),
+                    blurRadius: 8,
+                  )
+                ]),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -646,7 +713,8 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 52,
               height: 52,
               decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [color, color.withOpacity(0.6)]),
+                gradient:
+                    LinearGradient(colors: [color, color.withOpacity(0.6)]),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Center(
@@ -712,7 +780,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Row(
                     children: [
-                      const FaIcon(FontAwesomeIcons.whatsapp, color: Color(0xFF25D366), size: 24),
+                      const FaIcon(FontAwesomeIcons.whatsapp,
+                          color: Color(0xFF25D366), size: 24),
                       const SizedBox(width: 10),
                       Text(
                         'WhatsApp Us',
@@ -737,11 +806,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF25D366),
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
                     ),
                     onPressed: _launchWhatsApp,
-                    icon: const FaIcon(FontAwesomeIcons.whatsapp, size: 18, color: Colors.white),
+                    icon: const FaIcon(FontAwesomeIcons.whatsapp,
+                        size: 18, color: Colors.white),
                     label: Text(
                       'Chat Now',
                       style: GoogleFonts.plusJakartaSans(
@@ -776,9 +848,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildArmeniaFacts() {
     final facts = [
-      {'icon': '🏔️', 'fact': 'Land of\nMount Ararat', 'sub': 'Stunning Scenery'},
-      {'icon': '❄️', 'fact': 'Experience\nReal Snow', 'sub': 'First time for many!'},
-      {'icon': '🏛️', 'fact': '2,800+\nYears Old', 'sub': 'Ancient Civilization'},
+      {
+        'icon': '🏔️',
+        'fact': 'Land of\nMount Ararat',
+        'sub': 'Stunning Scenery'
+      },
+      {
+        'icon': '❄️',
+        'fact': 'Experience\nReal Snow',
+        'sub': 'First time for many!'
+      },
+      {
+        'icon': '🏛️',
+        'fact': '2,800+\nYears Old',
+        'sub': 'Ancient Civilization'
+      },
       {'icon': '🌍', 'fact': '120+\nCountries', 'sub': 'Degree Recognized'},
     ];
 

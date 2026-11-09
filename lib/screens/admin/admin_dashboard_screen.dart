@@ -12,6 +12,7 @@ import 'admin_student_progress_screen.dart';
 import 'admin_fees_screen.dart';
 import 'admin_meetings_screen.dart';
 import 'admin_news_screen.dart';
+import 'admin_parent_links_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -124,21 +125,33 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       children: [
         Row(
           children: [
-            Expanded(child: _statCard('Applications', _db('applications'), AppColors.primary, Icons.assignment_rounded)),
+            Expanded(
+                child: _statCard('Applications', _db('applications'),
+                    AppColors.primary, Icons.assignment_rounded)),
             const SizedBox(width: 12),
-            Expanded(child: _statCard('Announcements', _db('announcements'), AppColors.secondary, Icons.campaign_rounded)),
+            Expanded(
+                child: _statCard('Announcements', _db('announcements'),
+                    AppColors.secondary, Icons.campaign_rounded)),
             const SizedBox(width: 12),
-            Expanded(child: _statCard('Media Posts', _db('media_posts'), AppColors.tertiary, Icons.photo_library_rounded)),
+            Expanded(
+                child: _statCard('Media Posts', _db('media_posts'),
+                    AppColors.tertiary, Icons.photo_library_rounded)),
           ],
         ),
         const SizedBox(height: 12),
         Row(
           children: [
-            Expanded(child: _statCard('Meetings', _db('meetings'), const Color(0xFF00E676), Icons.video_call_rounded)),
+            Expanded(
+                child: _statCard('Meetings', _db('meetings'),
+                    const Color(0xFF00E676), Icons.video_call_rounded)),
             const SizedBox(width: 12),
-            Expanded(child: _statCard('News Articles', _db('news_articles'), const Color(0xFFFF9800), Icons.newspaper_rounded)),
+            Expanded(
+                child: _statCard('News Articles', _db('news_articles'),
+                    const Color(0xFFFF9800), Icons.newspaper_rounded)),
             const SizedBox(width: 12),
-            Expanded(child: _statCard('Progress Records', _db('student_progress'), AppColors.neonPurple, Icons.school_rounded)),
+            Expanded(
+                child: _statCard('Progress Records', _db('student_progress'),
+                    AppColors.neonPurple, Icons.school_rounded)),
           ],
         ),
       ],
@@ -173,7 +186,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             label,
             textAlign: TextAlign.center,
             style: GoogleFonts.plusJakartaSans(
-                fontSize: 11, color: context.dc.textMuted, fontWeight: FontWeight.w600),
+                fontSize: 11,
+                color: context.dc.textMuted,
+                fontWeight: FontWeight.w600),
           ),
         ],
       ),
@@ -186,14 +201,69 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   Widget _buildAdminGrid(BuildContext context) {
     final actions = [
-      {'icon': Icons.assignment_rounded, 'label': 'View Applications', 'desc': 'See all student submissions', 'color': AppColors.primary, 'screen': const ApplicationsListScreen()},
-      {'icon': Icons.campaign_rounded, 'label': 'Post Announcement', 'desc': 'Publish a new notice', 'color': AppColors.secondary, 'screen': const PostAnnouncementScreen()},
-      {'icon': Icons.photo_library_rounded, 'label': 'Manage Media', 'desc': 'Add/delete photo posts', 'color': AppColors.tertiary, 'screen': const ManageMediaScreen()},
-      {'icon': Icons.notifications_active_rounded, 'label': 'Send Notification', 'desc': 'Push alert to all users', 'color': const Color(0xFF00E676), 'screen': const SendNotificationScreen()},
-      {'icon': Icons.school_rounded, 'label': 'Student Progress', 'desc': 'Update grades & GPA', 'color': AppColors.neonPurple, 'screen': const AdminStudentProgressScreen()},
-      {'icon': Icons.credit_card_rounded, 'label': 'Fee Records', 'desc': 'Manage student fees', 'color': const Color(0xFFFF9800), 'screen': const AdminFeesScreen()},
-      {'icon': Icons.video_call_rounded, 'label': 'Meetings', 'desc': 'Schedule parent meetings', 'color': AppColors.secondary, 'screen': const AdminMeetingsScreen()},
-      {'icon': Icons.newspaper_rounded, 'label': 'News Articles', 'desc': 'Post parent news & updates', 'color': const Color(0xFF00BCD4), 'screen': const AdminNewsScreen()},
+      {
+        'icon': Icons.assignment_rounded,
+        'label': 'View Applications',
+        'desc': 'See all student submissions',
+        'color': AppColors.primary,
+        'screen': const ApplicationsListScreen()
+      },
+      {
+        'icon': Icons.campaign_rounded,
+        'label': 'Post Announcement',
+        'desc': 'Publish a new notice',
+        'color': AppColors.secondary,
+        'screen': const PostAnnouncementScreen()
+      },
+      {
+        'icon': Icons.photo_library_rounded,
+        'label': 'Manage Media',
+        'desc': 'Add/delete photo posts',
+        'color': AppColors.tertiary,
+        'screen': const ManageMediaScreen()
+      },
+      {
+        'icon': Icons.notifications_active_rounded,
+        'label': 'Send Notification',
+        'desc': 'Push alert to all users',
+        'color': const Color(0xFF00E676),
+        'screen': const SendNotificationScreen()
+      },
+      {
+        'icon': Icons.school_rounded,
+        'label': 'Student Progress',
+        'desc': 'Update grades & GPA',
+        'color': AppColors.neonPurple,
+        'screen': const AdminStudentProgressScreen()
+      },
+      {
+        'icon': Icons.credit_card_rounded,
+        'label': 'Fee Records',
+        'desc': 'Manage student fees',
+        'color': const Color(0xFFFF9800),
+        'screen': const AdminFeesScreen()
+      },
+      {
+        'icon': Icons.video_call_rounded,
+        'label': 'Meetings',
+        'desc': 'Schedule parent meetings',
+        'color': AppColors.secondary,
+        'screen': const AdminMeetingsScreen()
+      },
+      {
+        'icon': Icons.newspaper_rounded,
+        'label': 'News Articles',
+        'desc': 'Post parent news & updates',
+        'color': const Color(0xFF00BCD4),
+        'screen': const AdminNewsScreen()
+      },
+      {
+        'icon': Icons.family_restroom_rounded,
+        'label': 'Parent Links',
+        'desc': 'Approve parent access',
+        'color': const Color(0xFF8BC34A),
+        'screen': const AdminParentLinksScreen()
+      },
     ];
 
     return GridView.builder(
@@ -227,8 +297,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     color: color.withOpacity(0.15),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(item['icon'] as IconData,
-                      color: color, size: 28),
+                  child: Icon(item['icon'] as IconData, color: color, size: 28),
                 ),
                 const SizedBox(height: 12),
                 Text(

@@ -44,10 +44,12 @@ class _LoginScreenState extends State<LoginScreen> {
     if (error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(error, style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
+          content: Text(error,
+              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           backgroundColor: AppColors.primary,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
     } else {
@@ -73,9 +75,10 @@ class _LoginScreenState extends State<LoginScreen> {
           Positioned(
             bottom: -50,
             right: -100,
-            child: _buildAmbientGlow(AppColors.neonPurple.withOpacity(0.15), 300),
+            child:
+                _buildAmbientGlow(AppColors.neonPurple.withOpacity(0.15), 300),
           ),
-          
+
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
@@ -130,8 +133,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 icon: Icons.alternate_email_rounded,
                                 keyboardType: TextInputType.emailAddress,
                                 validator: (v) {
-                                  if (v == null || v.isEmpty) return 'Please enter your email';
-                                  if (!v.contains('@')) return 'Enter a valid email';
+                                  if (v == null || v.isEmpty) {
+                                    return 'Please enter your email';
+                                  }
+                                  if (!v.contains('@')) {
+                                    return 'Enter a valid email';
+                                  }
                                   return null;
                                 },
                               ),
@@ -144,14 +151,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                 obscureText: _obscurePassword,
                                 suffixIcon: IconButton(
                                   icon: Icon(
-                                    _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                    _obscurePassword
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
                                     color: context.dc.textMuted,
                                   ),
-                                  onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                                  onPressed: () => setState(() =>
+                                      _obscurePassword = !_obscurePassword),
                                 ),
                                 validator: (v) {
-                                  if (v == null || v.isEmpty) return 'Please enter your password';
-                                  if (v.length < 6) return 'Password must be at least 6 characters';
+                                  if (v == null || v.isEmpty) {
+                                    return 'Please enter your password';
+                                  }
+                                  if (v.length < 6) {
+                                    return 'Password must be at least 6 characters';
+                                  }
                                   return null;
                                 },
                               ),
@@ -180,7 +194,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                           height: 20,
                                           width: 20,
                                           child: CircularProgressIndicator(
-                                              color: Colors.white, strokeWidth: 2),
+                                              color: Colors.white,
+                                              strokeWidth: 2),
                                         )
                                       : const Text('Sign In'),
                                 ),
@@ -207,7 +222,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                                  MaterialPageRoute(
+                                      builder: (_) => const RegisterScreen()),
                                 );
                               },
                               child: Text(
@@ -229,7 +245,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: TextButton(
                           onPressed: () {
                             Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(builder: (_) => const MainNavigation()),
+                              MaterialPageRoute(
+                                  builder: (_) => const MainNavigation()),
                               (_) => false,
                             );
                           },
@@ -301,7 +318,10 @@ class _LoginScreenState extends State<LoginScreen> {
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
-      style: GoogleFonts.plusJakartaSans(color: context.dc.textMain, fontSize: 14, fontWeight: FontWeight.w500),
+      style: GoogleFonts.plusJakartaSans(
+          color: context.dc.textMain,
+          fontSize: 14,
+          fontWeight: FontWeight.w500),
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon, color: AppColors.primary, size: 22),

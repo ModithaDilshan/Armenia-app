@@ -11,11 +11,16 @@ class ParentNoticesScreen extends StatelessWidget {
 
   Color _tagColor(String tag) {
     switch (tag) {
-      case 'Intake': return AppColors.primary;
-      case 'Scholarship': return AppColors.secondary;
-      case 'Info': return const Color(0xFF00E676);
-      case 'Event': return AppColors.neonPurple;
-      default: return AppColors.tertiary;
+      case 'Intake':
+        return AppColors.primary;
+      case 'Scholarship':
+        return AppColors.secondary;
+      case 'Info':
+        return const Color(0xFF00E676);
+      case 'Event':
+        return AppColors.neonPurple;
+      default:
+        return AppColors.tertiary;
     }
   }
 
@@ -26,7 +31,8 @@ class ParentNoticesScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: context.dc.surfaceHighlight.withOpacity(0.9),
         title: Text('📋 Notices & Announcements',
-            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, color: context.dc.textMain)),
+            style: GoogleFonts.plusJakartaSans(
+                fontWeight: FontWeight.w800, color: context.dc.textMain)),
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_rounded, color: context.dc.textMain),
@@ -37,7 +43,8 @@ class ParentNoticesScreen extends StatelessWidget {
         stream: FirestoreService().getAnnouncementsStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+            return const Center(
+                child: CircularProgressIndicator(color: AppColors.primary));
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return Center(
@@ -46,7 +53,9 @@ class ParentNoticesScreen extends StatelessWidget {
                 children: [
                   const Text('📭', style: TextStyle(fontSize: 60)),
                   const SizedBox(height: 16),
-                  Text('No notices yet', style: GoogleFonts.plusJakartaSans(fontSize: 16, color: context.dc.textMuted)),
+                  Text('No notices yet',
+                      style: GoogleFonts.plusJakartaSans(
+                          fontSize: 16, color: context.dc.textMuted)),
                 ],
               ),
             );
@@ -81,24 +90,40 @@ class ParentNoticesScreen extends StatelessWidget {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(20)),
-                            child: Text(tag, style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w700, color: color)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                                color: color.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Text(tag,
+                                style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                    color: color)),
                           ),
                           const Spacer(),
                           if (dateStr.isNotEmpty)
-                            Text(dateStr, style: GoogleFonts.plusJakartaSans(fontSize: 11, color: context.dc.textMuted)),
+                            Text(dateStr,
+                                style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 11, color: context.dc.textMuted)),
                         ],
                       ),
                       const SizedBox(height: 12),
                       Text(
                         data['title'] ?? '',
-                        style: GoogleFonts.plusJakartaSans(fontSize: 15, fontWeight: FontWeight.w700, color: context.dc.textMain, height: 1.4),
+                        style: GoogleFonts.plusJakartaSans(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: context.dc.textMain,
+                            height: 1.4),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         data['body'] ?? '',
-                        style: GoogleFonts.plusJakartaSans(fontSize: 13, color: context.dc.textMuted, height: 1.6),
+                        style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13,
+                            color: context.dc.textMuted,
+                            height: 1.6),
                       ),
                     ],
                   ),
@@ -112,7 +137,20 @@ class ParentNoticesScreen extends StatelessWidget {
   }
 
   String _month(int m) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
     return months[m - 1];
   }
 }

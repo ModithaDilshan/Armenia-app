@@ -13,6 +13,7 @@ import 'parent_news_screen.dart';
 import 'parent_notices_screen.dart';
 import 'meetings_screen.dart';
 import 'fee_status_screen.dart';
+import '../../services/auth_service.dart';
 
 class ParentPortalScreen extends StatefulWidget {
   const ParentPortalScreen({super.key});
@@ -25,6 +26,8 @@ class _ParentPortalScreenState extends State<ParentPortalScreen> {
   Map<String, dynamic>? _studentData;
   Map<String, dynamic>? _appData;
   bool _loading = true;
+  String? _studentId;
+  bool _isParentAccount = false;
 
   @override
   void initState() {
@@ -39,12 +42,33 @@ class _ParentPortalScreenState extends State<ParentPortalScreen> {
       return;
     }
     try {
-      final userDoc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      final appDoc  = await FirebaseFirestore.instance.collection('applications').doc(uid).get();
+      final accountDoc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      final accountData = accountDoc.data();
+      final studentId = await AuthService().getAccessibleStudentId();
+      final isParent = accountData?['role'] == 'parent';
+      if (studentId == null) {
+        setState(() {
+          _studentData = accountData;
+          _isParentAccount = isParent;
+          _loading = false;
+        });
+        return;
+      }
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(studentId)
+          .get();
+      final appDoc = await FirebaseFirestore.instance
+          .collection('applications')
+          .doc(studentId)
+          .get();
       setState(() {
         _studentData = userDoc.data();
-        _appData     = appDoc.exists ? appDoc.data() : null;
-        _loading     = false;
+        _appData = appDoc.exists ? appDoc.data() : null;
+        _studentId = studentId;
+        _isParentAccount = isParent;
+        _loading = false;
       });
     } catch (_) {
       setState(() => _loading = false);
@@ -52,18 +76,33 @@ class _ParentPortalScreenState extends State<ParentPortalScreen> {
   }
 
   void _launchWhatsApp1() async {
-    final uri = Uri.parse('https://wa.me/94702821035?text=Hello%2C%20I%20would%20like%20to%20speak%20with%20a%20counselor%20about%20my%20child%27s%20studies%20in%20Armenia.');
-    if (await canLaunchUrl(uri)) launchUrl(uri, mode: LaunchMode.externalApplication);
+    final uri = Uri.parse(
+        'https://wa.me/94778200056?text=Hello%2C%20I%20would%20like%20to%20speak%20with%20a%20counselor%20about%20my%20child%27s%20studies%20in%20Armenia.');
+    if (await canLaunchUrl(uri)) {
+      launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   void _launchWhatsApp2() async {
-    final uri = Uri.parse('https://wa.me/94741190119?text=Hello%2C%20I%20would%20like%20to%20speak%20with%20a%20counselor%20about%20my%20child%27s%20studies%20in%20Armenia.');
-    if (await canLaunchUrl(uri)) launchUrl(uri, mode: LaunchMode.externalApplication);
+    final uri = Uri.parse(
+        'https://wa.me/94778200043?text=Hello%2C%20I%20would%20like%20to%20speak%20with%20a%20counselor%20about%20my%20child%27s%20studies%20in%20Armenia.');
+    if (await canLaunchUrl(uri)) {
+      launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  void _launchWhatsApp3() async {
+    final uri = Uri.parse(
+        'https://wa.me/94778200053?text=Hello%2C%20I%20would%20like%20to%20speak%20with%20a%20counselor%20about%20my%20child%27s%20studies%20in%20Armenia.');
+    if (await canLaunchUrl(uri)) {
+      launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   void _launchFacebook() async {
     // Try to open Facebook app first, fall back to browser
-    final fbAppUri = Uri.parse('fb://facewebmodal/f?href=https://www.facebook.com/share/17kEMmU4fu/');
+    final fbAppUri = Uri.parse(
+        'fb://facewebmodal/f?href=https://www.facebook.com/share/17kEMmU4fu/');
     final fbWebUri = Uri.parse('https://www.facebook.com/share/17kEMmU4fu/');
     if (await canLaunchUrl(fbAppUri)) {
       launchUrl(fbAppUri, mode: LaunchMode.externalApplication);
@@ -74,7 +113,9 @@ class _ParentPortalScreenState extends State<ParentPortalScreen> {
 
   void _launchMeet() async {
     final uri = Uri.parse('https://meet.google.com');
-    if (await canLaunchUrl(uri)) launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (await canLaunchUrl(uri)) {
+      launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   Future<void> _logout(BuildContext context) async {
@@ -82,17 +123,30 @@ class _ParentPortalScreenState extends State<ParentPortalScreen> {
       context: context,
       builder: (_) => AlertDialog(
         backgroundColor: context.dc.surfaceHighlight,
-        title: Text('Logout', style: GoogleFonts.plusJakartaSans(color: context.dc.textMain, fontWeight: FontWeight.w700)),
-        content: Text('Are you sure you want to logout?', style: GoogleFonts.plusJakartaSans(color: context.dc.textMuted)),
+        title: Text('Logout',
+            style: GoogleFonts.plusJakartaSans(
+                color: context.dc.textMain, fontWeight: FontWeight.w700)),
+        content: Text('Are you sure you want to logout?',
+            style: GoogleFonts.plusJakartaSans(color: context.dc.textMuted)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: Text('Cancel', style: GoogleFonts.plusJakartaSans(color: context.dc.textMuted))),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: Text('Logout', style: GoogleFonts.plusJakartaSans(color: AppColors.primary, fontWeight: FontWeight.w700))),
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text('Cancel',
+                  style: GoogleFonts.plusJakartaSans(
+                      color: context.dc.textMuted))),
+          TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text('Logout',
+                  style: GoogleFonts.plusJakartaSans(
+                      color: AppColors.primary, fontWeight: FontWeight.w700))),
         ],
       ),
     );
     if (confirmed == true) {
-      await FirebaseAuth.instance.signOut();
-      if (context.mounted) Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      await AuthService().logout();
+      if (context.mounted) {
+        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      }
     }
   }
 
@@ -101,14 +155,56 @@ class _ParentPortalScreenState extends State<ParentPortalScreen> {
     if (_loading) {
       return Scaffold(
         backgroundColor: context.dc.background,
-        body: const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+        body: const Center(
+            child: CircularProgressIndicator(color: AppColors.primary)),
       );
     }
 
-    final studentName  = _studentData?['name']  ?? _appData?['name']  ?? 'Student';
-    final parentName   = _appData?['parentName'] ?? 'Parent';
-    final university   = _appData?['university'] ?? 'Yerevan State Medical University';
-    final program      = _appData?['program']    ?? 'Medicine';
+    if (_isParentAccount && _studentId == null) {
+      return Scaffold(
+        backgroundColor: context.dc.background,
+        appBar: AppBar(
+          backgroundColor: context.dc.surfaceHighlight,
+          title: Text('Parent Portal',
+              style: GoogleFonts.plusJakartaSans(
+                color: context.dc.textMain,
+                fontWeight: FontWeight.w800,
+              )),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(28),
+            child: AppTheme.glassCard(
+              padding: const EdgeInsets.all(24),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(Icons.link_off_rounded,
+                    color: AppColors.primary, size: 52),
+                const SizedBox(height: 16),
+                Text('Student account not linked',
+                    style: GoogleFonts.plusJakartaSans(
+                      color: context.dc.textMain,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                    )),
+                const SizedBox(height: 10),
+                Text(
+                  'Ask the student for the Student ID shown in Settings, then contact a counselor to link this parent account.',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.plusJakartaSans(
+                      color: context.dc.textMuted, height: 1.5),
+                ),
+              ]),
+            ),
+          ),
+        ),
+      );
+    }
+
+    final studentName = _studentData?['name'] ?? _appData?['name'] ?? 'Student';
+    final parentName = _appData?['parentName'] ?? 'Parent';
+    final university =
+        _appData?['university'] ?? 'Yerevan State Medical University';
+    final program = _appData?['program'] ?? 'Medicine';
 
     return Scaffold(
       backgroundColor: context.dc.background,
@@ -116,32 +212,68 @@ class _ParentPortalScreenState extends State<ParentPortalScreen> {
         backgroundColor: context.dc.surfaceHighlight.withOpacity(0.9),
         title: Text(
           '👨‍👩‍👧 Parent Portal',
-          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, color: context.dc.textMain),
+          style: GoogleFonts.plusJakartaSans(
+              fontWeight: FontWeight.w800, color: context.dc.textMain),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: 'Logout',
+            icon: const Icon(Icons.logout_rounded, color: AppColors.primary),
+            onPressed: () => _logout(context),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FadeInDown(duration: const Duration(milliseconds: 600), child: _buildWelcomeBanner(context, parentName, studentName, university, program)),
+            FadeInDown(
+                duration: const Duration(milliseconds: 600),
+                child: _buildWelcomeBanner(
+                    context, parentName, studentName, university, program)),
             const SizedBox(height: 28),
-            FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 100), child: _buildSectionTitle(context, '📋 Quick Access')),
+            FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 100),
+                child: _buildSectionTitle(context, '📋 Quick Access')),
             const SizedBox(height: 16),
-            FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 200), child: _buildPortalGrid(context, studentName, university, program)),
+            FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 200),
+                child: _buildPortalGrid(
+                    context, studentName, university, program)),
             const SizedBox(height: 32),
-            FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 300), child: _buildSectionTitle(context, '📢 Latest Notices')),
+            FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 300),
+                child: _buildSectionTitle(context, '📢 Latest Notices')),
             const SizedBox(height: 16),
-            FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 400), child: _buildNotices(context)),
+            FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 400),
+                child: _buildNotices(context)),
             const SizedBox(height: 32),
-            FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 500), child: _buildSectionTitle(context, '📞 Contact & Meetings')),
+            FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 500),
+                child: _buildSectionTitle(context, '📞 Contact & Meetings')),
             const SizedBox(height: 16),
-            FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 600), child: _buildContactSection(context)),
+            FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 600),
+                child: _buildContactSection(context)),
             const SizedBox(height: 32),
-            FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 700), child: _buildSectionTitle(context, '📅 Upcoming Events')),
+            FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 700),
+                child: _buildSectionTitle(context, '📅 Upcoming Events')),
             const SizedBox(height: 16),
-            FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 800), child: _buildEvents(context)),
+            FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 800),
+                child: _buildEvents(context)),
             const SizedBox(height: 32),
           ],
         ),
@@ -149,7 +281,8 @@ class _ParentPortalScreenState extends State<ParentPortalScreen> {
     );
   }
 
-  Widget _buildWelcomeBanner(BuildContext context, String parent, String student, String uni, String prog) {
+  Widget _buildWelcomeBanner(BuildContext context, String parent,
+      String student, String uni, String prog) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -172,7 +305,10 @@ class _ParentPortalScreenState extends State<ParentPortalScreen> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24),
               gradient: LinearGradient(
-                colors: [Colors.black.withOpacity(0.8), Colors.black.withOpacity(0.3)],
+                colors: [
+                  Colors.black.withOpacity(0.8),
+                  Colors.black.withOpacity(0.3)
+                ],
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
               ),
@@ -234,7 +370,8 @@ class _ParentPortalScreenState extends State<ParentPortalScreen> {
     );
   }
 
-  Widget _buildPortalGrid(BuildContext context, String studentName, String university, String program) {
+  Widget _buildPortalGrid(BuildContext context, String studentName,
+      String university, String program) {
     final items = [
       {
         'icon': '📊',
@@ -291,26 +428,42 @@ class _ParentPortalScreenState extends State<ParentPortalScreen> {
           onTap: () {
             switch (i) {
               case 0:
-                Navigator.push(context, MaterialPageRoute(builder: (_) => StudentProgressScreen(
-                  studentName: studentName,
-                  university: university,
-                  program: program,
-                )));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => StudentProgressScreen(
+                              studentId: _studentId,
+                              studentName: studentName,
+                              university: university,
+                              program: program,
+                            )));
                 break;
               case 1:
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const ParentNewsScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const ParentNewsScreen()));
                 break;
               case 2:
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const MediaScreen()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const MediaScreen()));
                 break;
               case 3:
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const ParentNoticesScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const ParentNoticesScreen()));
                 break;
               case 4:
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const MeetingsScreen()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const MeetingsScreen()));
                 break;
               case 5:
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeStatusScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            FeeStatusScreen(studentId: _studentId)));
                 break;
             }
           },
@@ -412,7 +565,8 @@ class _ParentPortalScreenState extends State<ParentPortalScreen> {
               ),
               const SizedBox(height: 12),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(12),
@@ -439,8 +593,8 @@ class _ParentPortalScreenState extends State<ParentPortalScreen> {
         _contactCard(
           context: context,
           icon: FontAwesomeIcons.whatsapp,
-          title: 'Chat with Counselor',
-          subtitle: '070 282 1035 · Available 9AM–9PM',
+          title: 'Counselor 1',
+          subtitle: '077 820 0056 · Available 9AM–9PM',
           color: const Color(0xFF25D366),
           onTap: _launchWhatsApp1,
         ),
@@ -448,10 +602,19 @@ class _ParentPortalScreenState extends State<ParentPortalScreen> {
         _contactCard(
           context: context,
           icon: FontAwesomeIcons.whatsapp,
-          title: 'Chat with Counselor 2',
-          subtitle: '074 119 0119 · Available 9AM–9PM',
+          title: 'Counselor 2',
+          subtitle: '077 820 0043 · Available 9AM–9PM',
           color: const Color(0xFF25D366),
           onTap: _launchWhatsApp2,
+        ),
+        const SizedBox(height: 12),
+        _contactCard(
+          context: context,
+          icon: FontAwesomeIcons.whatsapp,
+          title: 'Counselor 3',
+          subtitle: '077 820 0053 · Available 9AM–9PM',
+          color: const Color(0xFF25D366),
+          onTap: _launchWhatsApp3,
         ),
         const SizedBox(height: 12),
         _contactCard(

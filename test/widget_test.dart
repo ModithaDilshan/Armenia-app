@@ -1,30 +1,48 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:armenia_lanka_edu/main.dart';
+import 'package:provider/provider.dart';
+import 'package:armenia_lanka_edu/core/constants/app_constants.dart';
+import 'package:armenia_lanka_edu/core/theme/theme_provider.dart';
+import 'package:armenia_lanka_edu/models/university_model.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('university catalogue contains valid, unique entries', () {
+    final universities = UniversityData.getUniversities();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(universities, isNotEmpty);
+    expect(universities.map((item) => item.id).toSet().length,
+        universities.length);
+    for (final university in universities) {
+      expect(university.name, isNotEmpty);
+      expect(university.faculties, isNotEmpty);
+      expect(university.tuitionFeeUSD, greaterThan(0));
+      expect(university.imageUrl, startsWith('assets/images/'));
+    }
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  test('WhatsApp links are encoded safely', () {
+    final uri =
+        AppConstants.whatsappUri('94770000000', 'Hello there & welcome');
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(uri.host, 'wa.me');
+    expect(uri.path, '/94770000000');
+    expect(uri.queryParameters['text'], 'Hello there & welcome');
+  });
+
+  testWidgets('theme provider exposes the selected mode', (tester) async {
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => ThemeProvider(isDark: false),
+        child: MaterialApp(
+          home: Builder(builder: (context) {
+            final provider = context.watch<ThemeProvider>();
+            return Text(provider.isDark ? 'dark' : 'light');
+          }),
+        ),
+      ),
+    );
+
+    expect(find.text('light'), findsOneWidget);
+    expect(find.text('dark'), findsNothing);
   });
 }

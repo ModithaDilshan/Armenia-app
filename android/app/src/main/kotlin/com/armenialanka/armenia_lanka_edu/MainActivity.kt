@@ -1,4 +1,4 @@
-package com.armenialanka.armenia_lanka_edu
+package com.armenia.lanka.edu
 
 import io.flutter.embedding.android.FlutterActivity
 

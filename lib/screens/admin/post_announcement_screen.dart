@@ -19,7 +19,14 @@ class _PostAnnouncementScreenState extends State<PostAnnouncementScreen> {
   bool _isPosting = false;
   final _firestoreService = FirestoreService();
 
-  final List<String> _tags = ['Info', 'Intake', 'Scholarship', 'Event', 'Urgent', 'Update'];
+  final List<String> _tags = [
+    'Info',
+    'Intake',
+    'Scholarship',
+    'Event',
+    'Urgent',
+    'Update'
+  ];
 
   @override
   void dispose() {
@@ -108,8 +115,9 @@ class _PostAnnouncementScreenState extends State<PostAnnouncementScreen> {
                       label: 'Full announcement text...',
                       icon: Icons.article_rounded,
                       maxLines: 4,
-                      validator: (v) =>
-                          (v == null || v.isEmpty) ? 'Enter the announcement body' : null,
+                      validator: (v) => (v == null || v.isEmpty)
+                          ? 'Enter the announcement body'
+                          : null,
                     ),
                     const SizedBox(height: 16),
                     Text('Tag',
@@ -193,7 +201,8 @@ class _PostAnnouncementScreenState extends State<PostAnnouncementScreen> {
               builder: (context, snap) {
                 if (!snap.hasData) {
                   return const Center(
-                      child: CircularProgressIndicator(color: AppColors.primary));
+                      child:
+                          CircularProgressIndicator(color: AppColors.primary));
                 }
                 final docs = snap.data!.docs;
                 return ListView.builder(
@@ -257,11 +266,12 @@ class _PostAnnouncementScreenState extends State<PostAnnouncementScreen> {
     return TextFormField(
       controller: controller,
       maxLines: maxLines,
-      style: GoogleFonts.plusJakartaSans(color: context.dc.textMain, fontSize: 14),
+      style:
+          GoogleFonts.plusJakartaSans(color: context.dc.textMain, fontSize: 14),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle:
-            GoogleFonts.plusJakartaSans(color: context.dc.textMuted, fontSize: 13),
+        labelStyle: GoogleFonts.plusJakartaSans(
+            color: context.dc.textMuted, fontSize: 13),
         prefixIcon: Icon(icon, color: AppColors.secondary, size: 20),
         filled: true,
         fillColor: context.dc.surfaceHighlight,

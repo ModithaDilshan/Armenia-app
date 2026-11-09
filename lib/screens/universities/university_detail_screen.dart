@@ -19,7 +19,6 @@ class UniversityDetailScreen extends StatefulWidget {
 class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
   University get university => widget.university;
 
-
   Color get _color {
     final map = {
       'Medical': AppColors.primary,
@@ -50,17 +49,50 @@ class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FadeInUp(duration: const Duration(milliseconds: 600), child: _buildQuickStats()),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 100), child: _buildBadges()),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 200), child: _buildSection('📖 About', university.description)),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 300), child: _buildSection('🏛️ History', university.history)),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 400), child: _buildSection('✅ Accreditation', university.accreditation)),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 500), child: _buildSection('🏆 Rankings', university.ranking)),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 600), child: _buildFaculties()),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 700), child: _buildFeesSection()),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 800), child: _buildBenefits()),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 900), child: _buildTestimonials()),
-                FadeInUp(duration: const Duration(milliseconds: 600), delay: const Duration(milliseconds: 1000), child: _buildApplySection(context)),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    child: _buildQuickStats()),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 100),
+                    child: _buildBadges()),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 200),
+                    child: _buildSection('📖 About', university.description)),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 300),
+                    child: _buildSection('🏛️ History', university.history)),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 400),
+                    child: _buildSection(
+                        '✅ Accreditation', university.accreditation)),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 500),
+                    child: _buildSection('🏆 Rankings', university.ranking)),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 600),
+                    child: _buildFaculties()),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 700),
+                    child: _buildFeesSection()),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 800),
+                    child: _buildBenefits()),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 900),
+                    child: _buildTestimonials()),
+                FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 1000),
+                    child: _buildApplySection(context)),
                 const SizedBox(height: 32),
               ],
             ),
@@ -101,7 +133,10 @@ class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
               Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.black.withOpacity(0.8), Colors.black.withOpacity(0.2)],
+                    colors: [
+                      Colors.black.withOpacity(0.8),
+                      Colors.black.withOpacity(0.2)
+                    ],
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                   ),
@@ -176,13 +211,19 @@ class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _statItem('${university.sriLankanStudents}+', 'SL Students', _color),
+            _statItem(
+                '${university.sriLankanStudents}+', 'SL Students', _color),
             _vDivider(),
-            _statItem('\$${university.tuitionFeeUSD.toInt()}', 'Tuition/yr', _color),
+            _statItem(
+                '\$${university.tuitionFeeUSD.toInt()}', 'Tuition/yr', _color),
             _vDivider(),
-            _statItem('\$${university.hostelFeeUSD.toInt()}', 'Hostel/yr', _color),
+            _statItem(
+                '\$${university.hostelFeeUSD.toInt()}', 'Hostel/yr', _color),
             _vDivider(),
-            _statItem(university.degreeDuration.split('(').last.replaceAll(')', ''), 'Duration', _color),
+            _statItem(
+                university.degreeDuration.split('(').last.replaceAll(')', ''),
+                'Duration',
+                _color),
           ],
         ),
       ),
@@ -213,7 +254,8 @@ class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
     );
   }
 
-  Widget _vDivider() => Container(width: 1, height: 36, color: context.dc.textMuted.withOpacity(0.2));
+  Widget _vDivider() => Container(
+      width: 1, height: 36, color: context.dc.textMuted.withOpacity(0.2));
 
   Widget _buildBadges() {
     return Padding(
@@ -302,7 +344,8 @@ class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
           const SizedBox(height: 12),
           ...university.faculties.map((f) => AppTheme.glassCard(
                 margin: const EdgeInsets.only(bottom: 10),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 borderRadius: 14,
                 borderColor: _color.withOpacity(0.2),
                 child: Row(
@@ -314,7 +357,8 @@ class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
                         color: _color,
                         shape: BoxShape.circle,
                         boxShadow: [
-                          BoxShadow(color: _color.withOpacity(0.5), blurRadius: 6)
+                          BoxShadow(
+                              color: _color.withOpacity(0.5), blurRadius: 6)
                         ],
                       ),
                     ),
@@ -356,10 +400,14 @@ class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
             borderColor: _color.withOpacity(0.3),
             child: Column(
               children: [
-                _feeRow('📘 Tuition Fee', '\$${university.tuitionFeeUSD.toInt()} / year', true),
-                _feeRow('🏠 Hostel Fee', '\$${university.hostelFeeUSD.toInt()} / year', false),
-                _feeRow('🏥 Insurance', '\$${university.insuranceFeeUSD.toInt()} / year', true),
-                _feeRow('🛂 Visa Fee', '\$${university.visaFeeUSD.toInt()} (one-time)', false),
+                _feeRow('📘 Tuition Fee',
+                    '\$${university.tuitionFeeUSD.toInt()} / year', true),
+                _feeRow('🏠 Hostel Fee',
+                    '\$${university.hostelFeeUSD.toInt()} / year', false),
+                _feeRow('🏥 Insurance',
+                    '\$${university.insuranceFeeUSD.toInt()} / year', true),
+                _feeRow('🛂 Visa Fee',
+                    '\$${university.visaFeeUSD.toInt()} (one-time)', false),
                 _feeRow(
                     '💵 Total/Year (est.)',
                     '\$${(university.tuitionFeeUSD + university.hostelFeeUSD + university.insuranceFeeUSD).toInt()}',
@@ -404,9 +452,7 @@ class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        color: isShaded
-            ? _color.withOpacity(0.08)
-            : Colors.transparent,
+        color: isShaded ? _color.withOpacity(0.08) : Colors.transparent,
         borderRadius: isTotal
             ? const BorderRadius.vertical(bottom: Radius.circular(16))
             : null,
@@ -603,4 +649,3 @@ class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
     );
   }
 }
-

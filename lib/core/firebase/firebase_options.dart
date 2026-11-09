@@ -7,7 +7,9 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'Firebase is currently configured for Android only.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -23,7 +25,9 @@ class DefaultFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'Firebase is currently configured for Android only.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -42,23 +46,5 @@ class DefaultFirebaseOptions {
     messagingSenderId: '740572654649',
     projectId: 'armenia-lanka-edu',
     storageBucket: 'armenia-lanka-edu.firebasestorage.app',
-  );
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCEXleTDHOGHYeYra3Q_Uey0slxfdyy24M',
-    appId: '1:740572654649:android:1578472b67a019d91c71e8',
-    messagingSenderId: '740572654649',
-    projectId: 'armenia-lanka-edu',
-    storageBucket: 'armenia-lanka-edu.firebasestorage.app',
-    authDomain: 'armenia-lanka-edu.firebaseapp.com',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCEXleTDHOGHYeYra3Q_Uey0slxfdyy24M',
-    appId: '1:740572654649:android:1578472b67a019d91c71e8',
-    messagingSenderId: '740572654649',
-    projectId: 'armenia-lanka-edu',
-    storageBucket: 'armenia-lanka-edu.firebasestorage.app',
-    authDomain: 'armenia-lanka-edu.firebaseapp.com',
   );
 }

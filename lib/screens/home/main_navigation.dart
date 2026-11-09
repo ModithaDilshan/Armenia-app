@@ -10,6 +10,7 @@ import '../parent_portal/parent_portal_screen.dart';
 import '../settings/settings_screen.dart';
 import '../admin/admin_dashboard_screen.dart';
 import '../../services/auth_service.dart';
+import '../../services/notification_service.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -30,6 +31,7 @@ class _MainNavigationState extends State<MainNavigation> {
   }
 
   Future<void> _checkAdminStatus() async {
+    await NotificationService.initialize();
     final isAdmin = await AuthService().isAdmin();
     if (mounted) {
       setState(() {
@@ -42,15 +44,30 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget _buildScreen(int index) {
     // Only build the currently selected screen (prevents all screens loading at once)
     switch (index) {
-      case 0: return const HomeScreen();
-      case 1: return const UniversitiesScreen();
-      case 2: return const ApplyScreen();
-      case 3: return const MediaScreen();
-      case 4: return const ParentPortalScreen();
-      case 5: return const SettingsScreen();
-      case 6: return _isAdmin ? const AdminDashboardScreen() : const HomeScreen();
-      default: return const HomeScreen();
+      case 0:
+        return HomeScreen(onNavigate: _goToTab);
+      case 1:
+        return const UniversitiesScreen();
+      case 2:
+        return const ApplyScreen();
+      case 3:
+        return const MediaScreen();
+      case 4:
+        return const ParentPortalScreen();
+      case 5:
+        return const SettingsScreen();
+      case 6:
+        return _isAdmin
+            ? const AdminDashboardScreen()
+            : HomeScreen(onNavigate: _goToTab);
+      default:
+        return HomeScreen(onNavigate: _goToTab);
     }
+  }
+
+  void _goToTab(int index) {
+    if (!mounted) return;
+    setState(() => _currentIndex = index);
   }
 
   @override
@@ -58,7 +75,8 @@ class _MainNavigationState extends State<MainNavigation> {
     if (_isLoading) {
       return Scaffold(
         backgroundColor: context.dc.background,
-        body: const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+        body: const Center(
+            child: CircularProgressIndicator(color: AppColors.primary)),
       );
     }
 
@@ -69,7 +87,8 @@ class _MainNavigationState extends State<MainNavigation> {
       _buildNavItem(context, Icons.photo_library_rounded, 3),
       _buildNavItem(context, Icons.family_restroom_rounded, 4),
       _buildNavItem(context, Icons.settings_rounded, 5),
-      if (_isAdmin) _buildNavItem(context, Icons.admin_panel_settings_rounded, 6),
+      if (_isAdmin)
+        _buildNavItem(context, Icons.admin_panel_settings_rounded, 6),
     ];
 
     return Scaffold(
@@ -107,7 +126,8 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget _buildNavItem(BuildContext context, IconData icon, int index) {
     return Icon(
       icon,
-      color: _currentIndex == index ? context.dc.textMain : context.dc.textMuted,
+      color:
+          _currentIndex == index ? context.dc.textMain : context.dc.textMuted,
       size: 26,
     );
   }

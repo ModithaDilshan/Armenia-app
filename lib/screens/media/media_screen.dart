@@ -5,6 +5,9 @@ import '../../core/theme/app_theme.dart';
 import '../../core/theme/dynamic_colors.dart';
 import '../../services/firestore_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MediaScreen extends StatefulWidget {
   const MediaScreen({super.key});
@@ -93,7 +96,7 @@ class _MediaScreenState extends State<MediaScreen>
             return FadeInUp(
               duration: const Duration(milliseconds: 400),
               delay: Duration(milliseconds: index * 60),
-              child: _buildPostCard(data),
+              child: _buildPostCard(docs[index].id, data),
             );
           },
         );
@@ -101,7 +104,7 @@ class _MediaScreenState extends State<MediaScreen>
     );
   }
 
-  Widget _buildPostCard(Map<String, dynamic> post) {
+  Widget _buildPostCard(String postId, Map<String, dynamic> post) {
     Color tagColor;
     final tag = post['tag'] ?? '';
     if (tag == 'Student Life') {
@@ -181,6 +184,21 @@ class _MediaScreenState extends State<MediaScreen>
                     ),
                   ),
                 ),
+                if ((post['videoUrl'] as String?)?.isNotEmpty == true)
+                  Center(
+                    child: IconButton.filled(
+                      tooltip: 'Play video',
+                      iconSize: 42,
+                      onPressed: () async {
+                        final uri = Uri.tryParse(post['videoUrl'] as String);
+                        if (uri != null) {
+                          await launchUrl(uri,
+                              mode: LaunchMode.externalApplication);
+                        }
+                      },
+                      icon: const Icon(Icons.play_arrow_rounded),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -210,14 +228,24 @@ class _MediaScreenState extends State<MediaScreen>
                 Row(
                   children: [
                     const Spacer(),
-                    _interactionBtn(
-                        Icons.favorite_border_rounded, '0', AppColors.primary),
-                    const SizedBox(width: 20),
-                    _interactionBtn(Icons.chat_bubble_outline_rounded, '0',
-                        AppColors.secondary),
+                    _likeButton(postId, (post['likes'] as num?)?.toInt() ?? 0),
                     const SizedBox(width: 20),
                     _interactionBtn(
-                        Icons.share_rounded, 'Share', AppColors.tertiary),
+                      Icons.share_rounded,
+                      'Share',
+                      AppColors.tertiary,
+                      onTap: () async {
+                        await Clipboard.setData(ClipboardData(
+                          text:
+                              '${post['title'] ?? ''}\n\n${post['desc'] ?? ''}',
+                        ));
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Post text copied.')),
+                          );
+                        }
+                      },
+                    ),
                   ],
                 ),
               ],
@@ -228,20 +256,58 @@ class _MediaScreenState extends State<MediaScreen>
     );
   }
 
-  Widget _interactionBtn(IconData icon, String label, Color color) {
-    return Row(
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 6),
-        Text(
-          label,
-          style: GoogleFonts.plusJakartaSans(
-            fontSize: 12,
-            color: context.dc.textMuted,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
+  Widget _likeButton(String postId, int baseLikes) {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final likes = FirebaseFirestore.instance
+        .collection('media_posts')
+        .doc(postId)
+        .collection('likes');
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: likes.snapshots(),
+      builder: (context, snapshot) {
+        final docs = snapshot.data?.docs ?? [];
+        final liked = uid != null && docs.any((doc) => doc.id == uid);
+        return _interactionBtn(
+          liked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+          '${baseLikes + docs.length}',
+          AppColors.primary,
+          onTap: uid == null
+              ? null
+              : () async {
+                  final ref = likes.doc(uid);
+                  if (liked) {
+                    await ref.delete();
+                  } else {
+                    await ref.set({'createdAt': FieldValue.serverTimestamp()});
+                  }
+                },
+        );
+      },
+    );
+  }
+
+  Widget _interactionBtn(
+    IconData icon,
+    String label,
+    Color color, {
+    VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+        child: Row(children: [
+          Icon(icon, color: color, size: 20),
+          const SizedBox(width: 6),
+          Text(label,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 12,
+                color: context.dc.textMuted,
+                fontWeight: FontWeight.w600,
+              )),
+        ]),
+      ),
     );
   }
 

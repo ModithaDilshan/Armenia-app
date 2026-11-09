@@ -149,7 +149,8 @@ class _AdminNewsScreenState extends State<AdminNewsScreen> {
         backgroundColor: context.dc.background,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon:
+              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -531,7 +532,7 @@ class _ArticleDialogState extends State<_ArticleDialog> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+        borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -570,8 +571,7 @@ class _ArticleDialogState extends State<_ArticleDialog> {
           children: [
             // Dialog Header
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.04),
                 borderRadius: const BorderRadius.vertical(
@@ -661,10 +661,13 @@ class _ArticleDialogState extends State<_ArticleDialog> {
                         controller: _emojiCtrl,
                         style: GoogleFonts.plusJakartaSans(
                             color: Colors.white, fontSize: 20),
-                        decoration: _fieldDecoration('Emoji',
-                            hint: 'e.g. 🏆'),
+                        decoration: _fieldDecoration('Emoji', hint: 'e.g. 🏆'),
                         maxLength: 8,
-                        buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
+                        buildCounter: (_,
+                                {required currentLength,
+                                required isFocused,
+                                maxLength}) =>
+                            null,
                         validator: (v) => (v == null || v.trim().isEmpty)
                             ? 'Emoji is required'
                             : null,
@@ -675,8 +678,8 @@ class _ArticleDialogState extends State<_ArticleDialog> {
                       TextFormField(
                         controller: _dateCtrl,
                         style: GoogleFonts.plusJakartaSans(color: Colors.white),
-                        decoration: _fieldDecoration('Date',
-                            hint: 'e.g. June 3, 2025'),
+                        decoration:
+                            _fieldDecoration('Date', hint: 'e.g. June 3, 2025'),
                         validator: (v) => (v == null || v.trim().isEmpty)
                             ? 'Date is required'
                             : null,

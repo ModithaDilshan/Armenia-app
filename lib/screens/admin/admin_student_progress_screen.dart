@@ -92,8 +92,9 @@ class _AdminStudentProgressScreenState
         final String name =
             data['fullName'] as String? ?? data['name'] as String? ?? 'Unknown';
         final String email = data['email'] as String? ?? '';
-        final String university =
-            data['university'] as String? ?? data['targetUniversity'] as String? ?? '';
+        final String university = data['university'] as String? ??
+            data['targetUniversity'] as String? ??
+            '';
         return _StudentItem(
           userId: userId,
           name: name,
@@ -214,8 +215,7 @@ class _AdminStudentProgressScreenState
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.school_outlined,
-                color: context.dc.textMuted, size: 56),
+            Icon(Icons.school_outlined, color: context.dc.textMuted, size: 56),
             const SizedBox(height: 16),
             Text(
               'No applications found',
@@ -270,9 +270,9 @@ class _StudentCard extends StatelessWidget {
           Container(
             width: 48,
             height: 48,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const LinearGradient(
+              gradient: LinearGradient(
                 colors: [AppColors.secondary, AppColors.neonPurple],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -280,9 +280,7 @@ class _StudentCard extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                student.name.isNotEmpty
-                    ? student.name[0].toUpperCase()
-                    : '?',
+                student.name.isNotEmpty ? student.name[0].toUpperCase() : '?',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
@@ -420,12 +418,12 @@ class _EditProgressScreenState extends State<_EditProgressScreen> {
         _gpaCtrl.text = data['gpa'] as String? ?? '';
         _overallAttCtrl.text =
             (data['overallAttendance'] as int?)?.toString() ?? '';
-        _labAttCtrl.text =
-            (data['labAttendance'] as int?)?.toString() ?? '';
+        _labAttCtrl.text = (data['labAttendance'] as int?)?.toString() ?? '';
 
         final rawSubjects = data['subjects'] as List<dynamic>? ?? [];
         _subjects = rawSubjects
-            .map((e) => _SubjectEntry.fromMap(Map<String, dynamic>.from(e as Map)))
+            .map((e) =>
+                _SubjectEntry.fromMap(Map<String, dynamic>.from(e as Map)))
             .toList();
       }
     } catch (_) {
@@ -480,11 +478,9 @@ class _EditProgressScreenState extends State<_EditProgressScreen> {
             color: Colors.white,
           ),
         ),
-        backgroundColor:
-            isError ? AppColors.primary : const Color(0xFF00C26F),
+        backgroundColor: isError ? AppColors.primary : const Color(0xFF00C26F),
         behavior: SnackBarBehavior.floating,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
       ),
     );
@@ -505,8 +501,7 @@ class _EditProgressScreenState extends State<_EditProgressScreen> {
     setState(() => _subjects.removeAt(index));
   }
 
-  InputDecoration _inputDeco(String label, {String? hint}) =>
-      InputDecoration(
+  InputDecoration _inputDeco(String label, {String? hint}) => InputDecoration(
         labelText: label,
         hintText: hint,
         filled: true,
@@ -517,28 +512,23 @@ class _EditProgressScreenState extends State<_EditProgressScreen> {
             color: context.dc.textMuted.withOpacity(0.5), fontSize: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide:
-              BorderSide(color: Colors.white.withOpacity(0.1)),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide:
-              BorderSide(color: Colors.white.withOpacity(0.1)),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide:
-              const BorderSide(color: AppColors.secondary, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.secondary, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide:
-              const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide:
-              const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
         ),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
@@ -688,8 +678,7 @@ class _EditProgressScreenState extends State<_EditProgressScreen> {
               controller: _overallAttCtrl,
               style: GoogleFonts.plusJakartaSans(
                   color: context.dc.textMain, fontSize: 14),
-              decoration:
-                  _inputDeco('Overall Attendance %', hint: '0 – 100'),
+              decoration: _inputDeco('Overall Attendance %', hint: '0 – 100'),
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               validator: (v) {
@@ -740,8 +729,7 @@ class _EditProgressScreenState extends State<_EditProgressScreen> {
                 decoration: BoxDecoration(
                   color: context.dc.surface,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                      color: Colors.white.withOpacity(0.08)),
+                  border: Border.all(color: Colors.white.withOpacity(0.08)),
                 ),
                 child: Center(
                   child: Text(
@@ -810,8 +798,7 @@ class _EditProgressScreenState extends State<_EditProgressScreen> {
                       borderRadius: BorderRadius.circular(16)),
                   elevation: 8,
                   shadowColor: AppColors.primary.withOpacity(0.4),
-                  disabledBackgroundColor:
-                      AppColors.primary.withOpacity(0.4),
+                  disabledBackgroundColor: AppColors.primary.withOpacity(0.4),
                 ),
                 child: _saving
                     ? const SizedBox(
@@ -894,9 +881,7 @@ class _SubjectCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     _chip(
                       subject.status,
-                      isPassing
-                          ? const Color(0xFF00C26F)
-                          : AppColors.primary,
+                      isPassing ? const Color(0xFF00C26F) : AppColors.primary,
                     ),
                   ],
                 ),
@@ -952,7 +937,14 @@ class _AddSubjectDialogState extends State<_AddSubjectDialog> {
   final _scoreCtrl = TextEditingController();
 
   static const _grades = [
-    'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'F',
+    'A',
+    'A-',
+    'B+',
+    'B',
+    'B-',
+    'C+',
+    'C',
+    'F',
   ];
 
   String _grade = 'A';
@@ -968,9 +960,7 @@ class _AddSubjectDialogState extends State<_AddSubjectDialog> {
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
     final scoreRaw = _scoreCtrl.text.trim();
-    final score = scoreRaw.contains('/')
-        ? scoreRaw
-        : '$scoreRaw/100';
+    final score = scoreRaw.contains('/') ? scoreRaw : '$scoreRaw/100';
     widget.onAdd(
       _SubjectEntry(
         name: _nameCtrl.text.trim(),
@@ -1001,18 +991,15 @@ class _AddSubjectDialogState extends State<_AddSubjectDialog> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:
-              const BorderSide(color: AppColors.secondary, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.secondary, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:
-              const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:
-              const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
         ),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
@@ -1047,8 +1034,7 @@ class _AddSubjectDialogState extends State<_AddSubjectDialog> {
                 controller: _nameCtrl,
                 style: GoogleFonts.plusJakartaSans(
                     color: context.dc.textMain, fontSize: 14),
-                decoration:
-                    _deco('Subject Name', hint: 'e.g. Mathematics'),
+                decoration: _deco('Subject Name', hint: 'e.g. Mathematics'),
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Required' : null,
               ),
@@ -1078,8 +1064,7 @@ class _AddSubjectDialogState extends State<_AddSubjectDialog> {
                 controller: _scoreCtrl,
                 style: GoogleFonts.plusJakartaSans(
                     color: context.dc.textMain, fontSize: 14),
-                decoration:
-                    _deco('Score', hint: 'e.g. 88 or 88/100'),
+                decoration: _deco('Score', hint: 'e.g. 88 or 88/100'),
                 keyboardType: TextInputType.text,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Required' : null,
@@ -1112,12 +1097,10 @@ class _AddSubjectDialogState extends State<_AddSubjectDialog> {
                       onPressed: () => Navigator.of(context).pop(),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: context.dc.textMuted,
-                        side: BorderSide(
-                            color: Colors.white.withOpacity(0.15)),
+                        side: BorderSide(color: Colors.white.withOpacity(0.15)),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
-                        padding:
-                            const EdgeInsets.symmetric(vertical: 13),
+                        padding: const EdgeInsets.symmetric(vertical: 13),
                       ),
                       child: Text('Cancel',
                           style: GoogleFonts.plusJakartaSans(
@@ -1132,8 +1115,7 @@ class _AddSubjectDialogState extends State<_AddSubjectDialog> {
                         backgroundColor: AppColors.primary,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
-                        padding:
-                            const EdgeInsets.symmetric(vertical: 13),
+                        padding: const EdgeInsets.symmetric(vertical: 13),
                         elevation: 0,
                       ),
                       child: Text(

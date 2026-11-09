@@ -20,7 +20,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _studentIdController = TextEditingController();
   final _authService = AuthService();
+  String _accountType = 'student';
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirm = true;
@@ -32,6 +34,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _studentIdController.dispose();
     super.dispose();
   }
 
@@ -44,6 +47,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       email: _emailController.text,
       phone: _phoneController.text,
       password: _passwordController.text,
+      role: _accountType,
+      linkedStudentId:
+          _accountType == 'parent' ? _studentIdController.text : null,
     );
 
     if (!mounted) return;
@@ -52,20 +58,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(error, style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
+          content: Text(error,
+              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           backgroundColor: AppColors.primary,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Account created successfully! Welcome 🎉',
-              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600, color: Colors.white)),
+              style: GoogleFonts.plusJakartaSans(
+                  fontWeight: FontWeight.w600, color: Colors.white)),
           backgroundColor: AppColors.secondary.withOpacity(0.8),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
       await Future.delayed(const Duration(milliseconds: 800));
@@ -85,7 +95,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.dc.textMain),
+          icon: Icon(Icons.arrow_back_ios_new_rounded,
+              color: context.dc.textMain),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -100,9 +111,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Positioned(
             bottom: -50,
             left: -100,
-            child: _buildAmbientGlow(AppColors.secondary.withOpacity(0.15), 300),
+            child:
+                _buildAmbientGlow(AppColors.secondary.withOpacity(0.15), 300),
           ),
-          
           SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
@@ -142,11 +153,56 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         padding: const EdgeInsets.all(24),
                         child: Column(
                           children: [
+                            DropdownButtonFormField<String>(
+                              value: _accountType,
+                              dropdownColor: context.dc.surfaceHighlight,
+                              style: GoogleFonts.plusJakartaSans(
+                                color: context.dc.textMain,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              decoration: InputDecoration(
+                                labelText: 'Account Type',
+                                prefixIcon: const Icon(Icons.badge_outlined),
+                                filled: true,
+                                fillColor: context.dc.surface,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                              items: const [
+                                DropdownMenuItem(
+                                  value: 'student',
+                                  child: Text('Student'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'parent',
+                                  child: Text('Parent / Guardian'),
+                                ),
+                              ],
+                              onChanged: (value) => setState(
+                                () => _accountType = value ?? 'student',
+                              ),
+                            ),
+                            if (_accountType == 'parent') ...[
+                              const SizedBox(height: 16),
+                              _buildTextField(
+                                controller: _studentIdController,
+                                label: 'Student ID',
+                                icon: Icons.link_rounded,
+                                validator: (value) => value == null ||
+                                        value.trim().isEmpty
+                                    ? 'Enter the Student ID shown in the student account'
+                                    : null,
+                              ),
+                            ],
+                            const SizedBox(height: 16),
                             _buildTextField(
                               controller: _nameController,
                               label: 'Full Name',
                               icon: Icons.person_outline_rounded,
-                              validator: (v) => (v == null || v.isEmpty) ? 'Enter your full name' : null,
+                              validator: (v) => (v == null || v.isEmpty)
+                                  ? 'Enter your full name'
+                                  : null,
                             ),
                             const SizedBox(height: 16),
                             _buildTextField(
@@ -155,8 +211,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               icon: Icons.alternate_email_rounded,
                               keyboardType: TextInputType.emailAddress,
                               validator: (v) {
-                                if (v == null || v.isEmpty) return 'Enter your email';
-                                if (!v.contains('@')) return 'Enter a valid email';
+                                if (v == null || v.isEmpty) {
+                                  return 'Enter your email';
+                                }
+                                if (!v.contains('@')) {
+                                  return 'Enter a valid email';
+                                }
                                 return null;
                               },
                             ),
@@ -166,7 +226,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               label: 'Mobile Number',
                               icon: Icons.phone_outlined,
                               keyboardType: TextInputType.phone,
-                              validator: (v) => (v == null || v.isEmpty) ? 'Enter your mobile number' : null,
+                              validator: (v) => (v == null || v.isEmpty)
+                                  ? 'Enter your mobile number'
+                                  : null,
                             ),
                             const SizedBox(height: 16),
                             _buildTextField(
@@ -176,14 +238,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               obscureText: _obscurePassword,
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                  _obscurePassword
+                                      ? Icons.visibility_off_outlined
+                                      : Icons.visibility_outlined,
                                   color: context.dc.textMuted,
                                 ),
-                                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                                onPressed: () => setState(
+                                    () => _obscurePassword = !_obscurePassword),
                               ),
                               validator: (v) {
-                                if (v == null || v.isEmpty) return 'Enter a password';
-                                if (v.length < 6) return 'Password must be at least 6 characters';
+                                if (v == null || v.isEmpty) {
+                                  return 'Enter a password';
+                                }
+                                if (v.length < 6) {
+                                  return 'Password must be at least 6 characters';
+                                }
                                 return null;
                               },
                             ),
@@ -195,14 +264,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               obscureText: _obscureConfirm,
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _obscureConfirm ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                  _obscureConfirm
+                                      ? Icons.visibility_off_outlined
+                                      : Icons.visibility_outlined,
                                   color: context.dc.textMuted,
                                 ),
-                                onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                                onPressed: () => setState(
+                                    () => _obscureConfirm = !_obscureConfirm),
                               ),
                               validator: (v) {
-                                if (v == null || v.isEmpty) return 'Please confirm your password';
-                                if (v != _passwordController.text) return 'Passwords do not match';
+                                if (v == null || v.isEmpty) {
+                                  return 'Please confirm your password';
+                                }
+                                if (v != _passwordController.text) {
+                                  return 'Passwords do not match';
+                                }
                                 return null;
                               },
                             ),
@@ -216,7 +292,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         height: 20,
                                         width: 20,
                                         child: CircularProgressIndicator(
-                                            color: Colors.white, strokeWidth: 2),
+                                            color: Colors.white,
+                                            strokeWidth: 2),
                                       )
                                     : const Text('Create Account'),
                               ),
@@ -283,7 +360,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
-      style: GoogleFonts.plusJakartaSans(color: context.dc.textMain, fontSize: 14, fontWeight: FontWeight.w500),
+      style: GoogleFonts.plusJakartaSans(
+          color: context.dc.textMain,
+          fontSize: 14,
+          fontWeight: FontWeight.w500),
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon, color: AppColors.primary, size: 22),

@@ -15,6 +15,7 @@ class UniversitiesScreen extends StatefulWidget {
 
 class _UniversitiesScreenState extends State<UniversitiesScreen> {
   String _selectedCategory = 'All';
+  String _searchQuery = '';
   final List<String> _categories = [
     'All',
     'Medical',
@@ -26,8 +27,19 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
 
   List<University> get _filteredUniversities {
     final all = UniversityData.getUniversities();
-    if (_selectedCategory == 'All') return all;
-    return all.where((u) => u.category == _selectedCategory).toList();
+    return all.where((university) {
+      final matchesCategory = _selectedCategory == 'All' ||
+          university.category == _selectedCategory;
+      final query = _searchQuery.trim().toLowerCase();
+      final matchesSearch = query.isEmpty ||
+          university.name.toLowerCase().contains(query) ||
+          university.shortName.toLowerCase().contains(query) ||
+          university.category.toLowerCase().contains(query) ||
+          university.faculties.any(
+            (faculty) => faculty.toLowerCase().contains(query),
+          );
+      return matchesCategory && matchesSearch;
+    }).toList();
   }
 
   final Map<String, Color> _categoryColors = {
@@ -59,19 +71,47 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
       ),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: TextField(
+              onChanged: (value) => setState(() => _searchQuery = value),
+              style: GoogleFonts.plusJakartaSans(color: context.dc.textMain),
+              decoration: InputDecoration(
+                hintText: 'Search universities or programs',
+                hintStyle:
+                    GoogleFonts.plusJakartaSans(color: context.dc.textMuted),
+                prefixIcon:
+                    Icon(Icons.search_rounded, color: context.dc.textMuted),
+                filled: true,
+                fillColor: context.dc.surface,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
           _buildStatsBar(),
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: _filteredUniversities.length,
-              itemBuilder: (context, index) {
-                return FadeInUp(
-                  duration: const Duration(milliseconds: 400),
-                  delay: Duration(milliseconds: index * 60),
-                  child: _buildUniversityCard(_filteredUniversities[index]),
-                );
-              },
-            ),
+            child: _filteredUniversities.isEmpty
+                ? Center(
+                    child: Text(
+                    'No universities match your search.',
+                    style: GoogleFonts.plusJakartaSans(
+                        color: context.dc.textMuted),
+                  ))
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _filteredUniversities.length,
+                    itemBuilder: (context, index) {
+                      return FadeInUp(
+                        duration: const Duration(milliseconds: 400),
+                        delay: Duration(milliseconds: index * 60),
+                        child:
+                            _buildUniversityCard(_filteredUniversities[index]),
+                      );
+                    },
+                  ),
           ),
         ],
       ),
@@ -104,7 +144,12 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
                   color: isSelected ? color : color.withOpacity(0.3),
                 ),
                 boxShadow: isSelected
-                    ? [BoxShadow(color: color.withOpacity(0.4), blurRadius: 8, offset: const Offset(0, 4))]
+                    ? [
+                        BoxShadow(
+                            color: color.withOpacity(0.4),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4))
+                      ]
                     : [],
               ),
               child: Text(
@@ -124,7 +169,8 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
 
   Widget _buildStatsBar() {
     final total = _filteredUniversities.length;
-    final totalStudents = _filteredUniversities.fold<int>(0, (sum, u) => sum + u.sriLankanStudents);
+    final totalStudents = _filteredUniversities.fold<int>(
+        0, (sum, u) => sum + u.sriLankanStudents);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: AppTheme.glassCard(
@@ -135,7 +181,8 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
           children: [
             _statItem('$total', 'Universities', AppColors.primary),
             _divider(),
-            _statItem('$totalStudents+', 'Sri Lankan Students', AppColors.secondary),
+            _statItem(
+                '$totalStudents+', 'Sri Lankan Students', AppColors.secondary),
             _divider(),
             _statItem('5', 'Categories', AppColors.tertiary),
           ],
@@ -169,7 +216,8 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
   }
 
   Widget _divider() {
-    return Container(width: 1, height: 36, color: context.dc.textMuted.withOpacity(0.2));
+    return Container(
+        width: 1, height: 36, color: context.dc.textMuted.withOpacity(0.2));
   }
 
   Widget _buildUniversityCard(University u) {
@@ -203,7 +251,8 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
             Container(
               height: 120,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(24)),
                 image: DecorationImage(
                   image: AssetImage(u.imageUrl),
                   fit: BoxFit.cover,
@@ -214,9 +263,13 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
                   // Dark overlay for text readability
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(24)),
                       gradient: LinearGradient(
-                        colors: [Colors.black.withOpacity(0.7), Colors.transparent],
+                        colors: [
+                          Colors.black.withOpacity(0.7),
+                          Colors.transparent
+                        ],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                       ),
@@ -229,7 +282,8 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(20),
@@ -267,23 +321,32 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
                     children: [
                       _infoChip(Icons.location_on_rounded, u.location, color),
                       const SizedBox(width: 12),
-                      _infoChip(Icons.timer_rounded, u.degreeDuration.split('|').first.trim(), color),
+                      _infoChip(Icons.timer_rounded,
+                          u.degreeDuration.split('|').first.trim(), color),
                     ],
                   ),
                   const SizedBox(height: 12),
                   Row(
                     children: [
-                      _featureBadge('No IELTS', u.noIeltsRequired, const Color(0xFF00E676)),
+                      _featureBadge('No IELTS', u.noIeltsRequired,
+                          const Color(0xFF00E676)),
                       const SizedBox(width: 8),
-                      _featureBadge('English Medium', u.hasEnglishMedium, AppColors.secondary),
+                      _featureBadge('English Medium', u.hasEnglishMedium,
+                          AppColors.secondary),
                     ],
                   ),
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      Expanded(child: _feeItem('Tuition/yr', '\$${u.tuitionFeeUSD.toInt()}', color)),
-                      Expanded(child: _feeItem('Hostel/yr', '\$${u.hostelFeeUSD.toInt()}', color)),
-                      Expanded(child: _feeItem('SL Students', '${u.sriLankanStudents}+', color)),
+                      Expanded(
+                          child: _feeItem('Tuition/yr',
+                              '\$${u.tuitionFeeUSD.toInt()}', color)),
+                      Expanded(
+                          child: _feeItem('Hostel/yr',
+                              '\$${u.hostelFeeUSD.toInt()}', color)),
+                      Expanded(
+                          child: _feeItem(
+                              'SL Students', '${u.sriLankanStudents}+', color)),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -293,12 +356,15 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: color,
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
                       ),
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => UniversityDetailScreen(university: u)),
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  UniversityDetailScreen(university: u)),
                         );
                       },
                       child: Text(

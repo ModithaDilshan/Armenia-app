@@ -1,0 +1,112 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function userData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return signedIn() && userData().role == 'admin';
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isLinkedParent(studentId) {
+      return signedIn() &&
+        userData().role == 'parent' &&
+        userData().get('linkApproved', false) == true &&
+        userData().linkedStudentId == studentId;
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isLinkedParent(userId) || isAdmin();
+      allow create: if isOwner(userId) &&
+        request.resource.data.role in ['student', 'parent'] &&
+        request.resource.data.get('linkApproved', false) == false;
+      allow update: if isAdmin() || (isOwner(userId) &&
+        request.resource.data.role == resource.data.role &&
+        request.resource.data.get('linkedStudentId', null) ==
+          resource.data.get('linkedStudentId', null) &&
+        request.resource.data.get('linkApproved', false) ==
+          resource.data.get('linkApproved', false));
+      allow delete: if isAdmin();
+
+      match /notification_reads/{notificationId} {
+        allow read, create, update, delete: if isOwner(userId);
+      }
+    }
+
+    match /applications/{studentId} {
+      allow read: if isOwner(studentId) || isLinkedParent(studentId) || isAdmin();
+      allow create: if isOwner(studentId) &&
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.status == 'Pending Review';
+      allow update: if isAdmin() || (isOwner(studentId) &&
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.status == resource.data.status);
+      allow delete: if isAdmin();
+    }
+
+    match /document_files/{documentId} {
+      allow read: if isAdmin() ||
+        (signedIn() && resource.data.userId == request.auth.uid) ||
+        (signedIn() && isLinkedParent(resource.data.userId));
+      allow create, update: if signedIn() &&
+        request.resource.data.userId == request.auth.uid;
+      allow delete: if isAdmin() ||
+        (signedIn() && resource.data.userId == request.auth.uid);
+    }
+
+    match /student_progress/{studentId} {
+      allow read: if isOwner(studentId) || isLinkedParent(studentId) || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /student_fees/{studentId} {
+      allow read: if isOwner(studentId) || isLinkedParent(studentId) || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /announcements/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /media_posts/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+
+      match /likes/{userId} {
+        allow read: if signedIn();
+        allow create, delete: if isOwner(userId);
+        allow update: if false;
+      }
+    }
+
+    match /meetings/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /news_articles/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /notifications/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

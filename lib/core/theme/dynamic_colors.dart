@@ -25,35 +25,34 @@ class DynamicColors {
 
   // ─── Dark palette ─────────────────────────────────────────────────────────
   static const DynamicColors dark = DynamicColors(
-    background:      Color(0xFF05050A),
-    surface:         Color(0xFF10101C),
+    background: Color(0xFF05050A),
+    surface: Color(0xFF10101C),
     surfaceHighlight: Color(0xFF1A1A2E),
-    textMain:        Color(0xFFFFFFFF),
-    textMuted:       Color(0xFFA0A0B0),
-    cardBorder:      Color(0x26FFFFFF),   // white 15%
-    inputFill:       Color(0xFF10101C),
-    divider:         Color(0x1AFFFFFF),   // white 10%
+    textMain: Color(0xFFFFFFFF),
+    textMuted: Color(0xFFA0A0B0),
+    cardBorder: Color(0x26FFFFFF), // white 15%
+    inputFill: Color(0xFF10101C),
+    divider: Color(0x1AFFFFFF), // white 10%
   );
 
   // ─── Light palette ────────────────────────────────────────────────────────
   static const DynamicColors light = DynamicColors(
-    background:      Color(0xFFF3F4FB),
-    surface:         Color(0xFFFFFFFF),
+    background: Color(0xFFF3F4FB),
+    surface: Color(0xFFFFFFFF),
     surfaceHighlight: Color(0xFFEAEBF8),
-    textMain:        Color(0xFF0D0D1A),
-    textMuted:       Color(0xFF606070),
-    cardBorder:      Color(0x1A000000),   // black 10%
-    inputFill:       Color(0xFFEEEEF8),
-    divider:         Color(0x1A000000),   // black 10%
+    textMain: Color(0xFF0D0D1A),
+    textMuted: Color(0xFF606070),
+    cardBorder: Color(0x1A000000), // black 10%
+    inputFill: Color(0xFFEEEEF8),
+    divider: Color(0x1A000000), // black 10%
   );
 }
 
 /// BuildContext extension for easy access: `context.dc.background`
 extension DynamicColorsContext on BuildContext {
-  DynamicColors get dc =>
-      Theme.of(this).brightness == Brightness.dark
-          ? DynamicColors.dark
-          : DynamicColors.light;
-  
+  DynamicColors get dc => Theme.of(this).brightness == Brightness.dark
+      ? DynamicColors.dark
+      : DynamicColors.light;
+
   bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
 }

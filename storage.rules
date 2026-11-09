@@ -1,0 +1,38 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function userData() {
+      return firestore.get(
+        /databases/(default)/documents/users/$(request.auth.uid)
+      ).data;
+    }
+
+    function isAdmin() {
+      return signedIn() && userData().role == 'admin';
+    }
+
+    function isLinkedParent(studentId) {
+      return signedIn() &&
+        userData().role == 'parent' &&
+        userData().get('linkApproved', false) == true &&
+        userData().linkedStudentId == studentId;
+    }
+
+    match /applications/{studentId}/{allPaths=**} {
+      allow read: if isAdmin() ||
+        request.auth.uid == studentId ||
+        isLinkedParent(studentId);
+      allow write: if signedIn() && request.auth.uid == studentId &&
+        request.resource.size < 10 * 1024 * 1024;
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

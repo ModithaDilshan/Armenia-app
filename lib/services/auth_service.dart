@@ -1,46 +1,52 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'notification_service.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  // Stream to listen to auth state changes
   Stream<User?> get authStateChanges => _auth.authStateChanges();
-
-  // Current user
   User? get currentUser => _auth.currentUser;
 
-  // ─── Register ────────────────────────────────────────────────────────────────
   Future<String?> register({
     required String name,
     required String email,
     required String phone,
     required String password,
+    String role = 'student',
+    String? linkedStudentId,
   }) async {
     try {
-      final cred = await _auth.createUserWithEmailAndPassword(
+      final normalizedRole = role == 'parent' ? 'parent' : 'student';
+      if (normalizedRole == 'parent' &&
+          (linkedStudentId == null || linkedStudentId.trim().isEmpty)) {
+        return 'Enter the Student ID provided by the student.';
+      }
+
+      final credential = await _auth.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password,
       );
-      // Save user profile to Firestore
-      await _db.collection('users').doc(cred.user!.uid).set({
+      await _db.collection('users').doc(credential.user!.uid).set({
         'name': name.trim(),
-        'email': email.trim(),
+        'email': email.trim().toLowerCase(),
         'phone': phone.trim(),
-        'role': 'student',
+        'role': normalizedRole,
+        if (normalizedRole == 'parent')
+          'linkedStudentId': linkedStudentId!.trim(),
+        if (normalizedRole == 'parent') 'linkApproved': false,
         'createdAt': FieldValue.serverTimestamp(),
       });
-      await cred.user!.updateDisplayName(name.trim());
-      return null; // null = success
-    } on FirebaseAuthException catch (e) {
-      return _authError(e.code);
-    } catch (e) {
+      await credential.user!.updateDisplayName(name.trim());
+      return null;
+    } on FirebaseAuthException catch (error) {
+      return _authError(error.code);
+    } catch (_) {
       return 'An unexpected error occurred. Please try again.';
     }
   }
 
-  // ─── Login ───────────────────────────────────────────────────────────────────
   Future<String?> login({
     required String email,
     required String password,
@@ -50,42 +56,54 @@ class AuthService {
         email: email.trim(),
         password: password,
       );
-      return null; // null = success
-    } on FirebaseAuthException catch (e) {
-      return _authError(e.code);
-    } catch (e) {
+      return null;
+    } on FirebaseAuthException catch (error) {
+      return _authError(error.code);
+    } catch (_) {
       return 'An unexpected error occurred. Please try again.';
     }
   }
 
-  // ─── Logout ──────────────────────────────────────────────────────────────────
   Future<void> logout() async {
+    await NotificationService.unsubscribeForLogout();
     await _auth.signOut();
   }
 
-  // ─── Check if admin ──────────────────────────────────────────────────────────
   Future<bool> isAdmin() async {
-    if (currentUser == null) return false;
+    final user = currentUser;
+    if (user == null) return false;
     try {
-      final doc = await _db.collection('users').doc(currentUser!.uid).get();
+      final doc = await _db.collection('users').doc(user.uid).get();
       return doc.data()?['role'] == 'admin';
     } catch (_) {
       return false;
     }
   }
 
-  // ─── Get user profile ────────────────────────────────────────────────────────
+  Future<String?> getAccessibleStudentId() async {
+    final user = currentUser;
+    if (user == null) return null;
+    final doc = await _db.collection('users').doc(user.uid).get();
+    final data = doc.data();
+    if (data?['role'] == 'parent') {
+      if (data?['linkApproved'] != true) return null;
+      final linkedId = (data?['linkedStudentId'] as String?)?.trim();
+      return linkedId == null || linkedId.isEmpty ? null : linkedId;
+    }
+    return user.uid;
+  }
+
   Future<Map<String, dynamic>?> getUserProfile() async {
-    if (currentUser == null) return null;
+    final user = currentUser;
+    if (user == null) return null;
     try {
-      final doc = await _db.collection('users').doc(currentUser!.uid).get();
+      final doc = await _db.collection('users').doc(user.uid).get();
       return doc.data();
     } catch (_) {
       return null;
     }
   }
 
-  // ─── Human-readable error messages ───────────────────────────────────────────
   String _authError(String code) {
     switch (code) {
       case 'email-already-in-use':
@@ -97,7 +115,6 @@ class AuthService {
       case 'user-not-found':
         return 'No account found with this email. Please register first.';
       case 'wrong-password':
-        return 'Incorrect password. Please try again.';
       case 'invalid-credential':
         return 'Incorrect email or password. Please try again.';
       case 'too-many-requests':
@@ -105,7 +122,7 @@ class AuthService {
       case 'network-request-failed':
         return 'No internet connection. Please check your network.';
       default:
-        return 'Login failed. Please try again.';
+        return 'Authentication failed. Please try again.';
     }
   }
 }

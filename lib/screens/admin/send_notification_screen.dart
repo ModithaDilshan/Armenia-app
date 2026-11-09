@@ -81,7 +81,8 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
               decoration: BoxDecoration(
                 color: const Color(0xFF00E676).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFF00E676).withOpacity(0.3)),
+                border:
+                    Border.all(color: const Color(0xFF00E676).withOpacity(0.3)),
               ),
               child: Row(
                 children: [
@@ -117,13 +118,18 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                             fontWeight: FontWeight.w700,
                             color: context.dc.textMain)),
                     const SizedBox(height: 16),
-                    _field(_titleController, 'Notification Title',
+                    _field(
+                        _titleController,
+                        'Notification Title',
                         Icons.notifications_rounded,
                         (v) => (v == null || v.isEmpty) ? 'Enter title' : null),
                     const SizedBox(height: 12),
-                    _field(_messageController, 'Message to users',
+                    _field(
+                        _messageController,
+                        'Message to users',
                         Icons.message_rounded,
-                        (v) => (v == null || v.isEmpty) ? 'Enter message' : null,
+                        (v) =>
+                            (v == null || v.isEmpty) ? 'Enter message' : null,
                         maxLines: 4),
                     const SizedBox(height: 24),
                     SizedBox(
@@ -142,10 +148,13 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                                 height: 20,
                                 child: CircularProgressIndicator(
                                     color: Colors.black87, strokeWidth: 2))
-                            : const Icon(Icons.send_rounded, color: Colors.black87),
-                        label: Text(_isSending ? 'Sending...' : 'Send to All Users',
+                            : const Icon(Icons.send_rounded,
+                                color: Colors.black87),
+                        label: Text(
+                            _isSending ? 'Sending...' : 'Send to All Users',
                             style: GoogleFonts.plusJakartaSans(
-                                fontWeight: FontWeight.w800, color: Colors.black87)),
+                                fontWeight: FontWeight.w800,
+                                color: Colors.black87)),
                       ),
                     ),
                   ],
@@ -158,7 +167,9 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
               alignment: Alignment.centerLeft,
               child: Text('📬 Past Notifications',
                   style: GoogleFonts.plusJakartaSans(
-                      fontSize: 18, fontWeight: FontWeight.w800, color: context.dc.textMain)),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: context.dc.textMain)),
             ),
             const SizedBox(height: 16),
             StreamBuilder<QuerySnapshot>(
@@ -169,13 +180,16 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                   .snapshots(),
               builder: (context, snap) {
                 if (!snap.hasData) {
-                  return const Center(child: CircularProgressIndicator(color: Color(0xFF00E676)));
+                  return const Center(
+                      child:
+                          CircularProgressIndicator(color: Color(0xFF00E676)));
                 }
                 final docs = snap.data!.docs;
                 if (docs.isEmpty) {
                   return Center(
                     child: Text('No notifications sent yet.',
-                        style: GoogleFonts.plusJakartaSans(color: context.dc.textMuted)),
+                        style: GoogleFonts.plusJakartaSans(
+                            color: context.dc.textMuted)),
                   );
                 }
                 return ListView.builder(
@@ -208,7 +222,8 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.plusJakartaSans(
-                                        fontSize: 12, color: context.dc.textMuted)),
+                                        fontSize: 12,
+                                        color: context.dc.textMuted)),
                               ],
                             ),
                           ),
@@ -226,23 +241,28 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
   }
 
   Widget _field(TextEditingController ctrl, String label, IconData icon,
-      String? Function(String?) validator, {int maxLines = 1}) {
+      String? Function(String?) validator,
+      {int maxLines = 1}) {
     return TextFormField(
       controller: ctrl,
       maxLines: maxLines,
-      style: GoogleFonts.plusJakartaSans(color: context.dc.textMain, fontSize: 14),
+      style:
+          GoogleFonts.plusJakartaSans(color: context.dc.textMain, fontSize: 14),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: GoogleFonts.plusJakartaSans(color: context.dc.textMuted, fontSize: 13),
+        labelStyle: GoogleFonts.plusJakartaSans(
+            color: context.dc.textMuted, fontSize: 13),
         prefixIcon: Icon(icon, color: const Color(0xFF00E676), size: 20),
         filled: true,
         fillColor: context.dc.surfaceHighlight,
         border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide.none),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: const BorderSide(color: Color(0xFF00E676), width: 1.5)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
       validator: validator,
     );

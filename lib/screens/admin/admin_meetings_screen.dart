@@ -16,7 +16,8 @@ class AdminMeetingsScreen extends StatelessWidget {
         backgroundColor: context.dc.background,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon:
+              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
@@ -88,8 +89,10 @@ class AdminMeetingsScreen extends StatelessWidget {
                 child: _MeetingCard(
                   docId: doc.id,
                   data: data,
-                  onEdit: () => _showMeetingForm(context, docId: doc.id, existing: data),
-                  onDelete: () => _confirmDelete(context, doc.id, data['title'] ?? 'Meeting'),
+                  onEdit: () =>
+                      _showMeetingForm(context, docId: doc.id, existing: data),
+                  onDelete: () => _confirmDelete(
+                      context, doc.id, data['title'] ?? 'Meeting'),
                 ),
               );
             },
@@ -139,7 +142,8 @@ class AdminMeetingsScreen extends StatelessWidget {
         ),
         content: Text(
           'Are you sure you want to delete "$title"? This action cannot be undone.',
-          style: GoogleFonts.plusJakartaSans(color: Colors.white70, fontSize: 14),
+          style:
+              GoogleFonts.plusJakartaSans(color: Colors.white70, fontSize: 14),
         ),
         actions: [
           TextButton(
@@ -199,9 +203,11 @@ class _MeetingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final status = data['status'] ?? 'Upcoming';
     final isUpcoming = status == 'Upcoming';
-    final statusColor = isUpcoming ? AppColors.secondary : const Color(0xFF00E676);
+    final statusColor =
+        isUpcoming ? AppColors.secondary : const Color(0xFF00E676);
     final meetUrl = data['meetUrl'] ?? '';
-    final truncatedUrl = meetUrl.length > 40 ? '${meetUrl.substring(0, 40)}…' : meetUrl;
+    final truncatedUrl =
+        meetUrl.length > 40 ? '${meetUrl.substring(0, 40)}…' : meetUrl;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
@@ -230,7 +236,8 @@ class _MeetingCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(20),
@@ -248,11 +255,15 @@ class _MeetingCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-            _InfoRow(icon: Icons.calendar_today_rounded, text: data['date'] ?? '—'),
+            _InfoRow(
+                icon: Icons.calendar_today_rounded, text: data['date'] ?? '—'),
             const SizedBox(height: 5),
-            _InfoRow(icon: Icons.access_time_rounded, text: data['time'] ?? '—'),
+            _InfoRow(
+                icon: Icons.access_time_rounded, text: data['time'] ?? '—'),
             const SizedBox(height: 5),
-            _InfoRow(icon: Icons.person_rounded, text: 'Host: ${data['host'] ?? '—'}'),
+            _InfoRow(
+                icon: Icons.person_rounded,
+                text: 'Host: ${data['host'] ?? '—'}'),
             const SizedBox(height: 5),
             _InfoRow(
               icon: Icons.link_rounded,
@@ -508,28 +519,33 @@ class _MeetingFormSheetState extends State<_MeetingFormSheet> {
                 controller: _titleCtrl,
                 label: 'Title',
                 hint: 'e.g. Parent–Teacher Meeting',
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Title is required' : null,
+                validator: (v) => (v == null || v.trim().isEmpty)
+                    ? 'Title is required'
+                    : null,
               ),
               const SizedBox(height: 14),
               _buildField(
                 controller: _dateCtrl,
                 label: 'Date',
                 hint: 'e.g. JUN 5, 2025',
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Date is required' : null,
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty) ? 'Date is required' : null,
               ),
               const SizedBox(height: 14),
               _buildField(
                 controller: _timeCtrl,
                 label: 'Time',
                 hint: 'e.g. 7:00 PM – 8:00 PM (SL Time)',
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Time is required' : null,
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty) ? 'Time is required' : null,
               ),
               const SizedBox(height: 14),
               _buildField(
                 controller: _hostCtrl,
                 label: 'Host',
                 hint: 'e.g. Mr. Karunasena',
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Host is required' : null,
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty) ? 'Host is required' : null,
               ),
               const SizedBox(height: 14),
               _buildField(
@@ -537,7 +553,9 @@ class _MeetingFormSheetState extends State<_MeetingFormSheet> {
                 label: 'Meet URL',
                 hint: 'https://meet.google.com/...',
                 keyboardType: TextInputType.url,
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Meet URL is required' : null,
+                validator: (v) => (v == null || v.trim().isEmpty)
+                    ? 'Meet URL is required'
+                    : null,
               ),
               const SizedBox(height: 14),
               _buildField(
@@ -547,7 +565,9 @@ class _MeetingFormSheetState extends State<_MeetingFormSheet> {
                 keyboardType: TextInputType.number,
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return 'Order is required';
-                  if (int.tryParse(v.trim()) == null) return 'Must be a whole number';
+                  if (int.tryParse(v.trim()) == null) {
+                    return 'Must be a whole number';
+                  }
                   return null;
                 },
               ),
@@ -573,11 +593,15 @@ class _MeetingFormSheetState extends State<_MeetingFormSheet> {
                     value: _status,
                     isExpanded: true,
                     dropdownColor: const Color(0xFF1A2B3C),
-                    style: GoogleFonts.plusJakartaSans(color: Colors.white, fontSize: 14),
-                    icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white54),
+                    style: GoogleFonts.plusJakartaSans(
+                        color: Colors.white, fontSize: 14),
+                    icon: const Icon(Icons.keyboard_arrow_down_rounded,
+                        color: Colors.white54),
                     items: const [
-                      DropdownMenuItem(value: 'Upcoming', child: Text('Upcoming')),
-                      DropdownMenuItem(value: 'Completed', child: Text('Completed')),
+                      DropdownMenuItem(
+                          value: 'Upcoming', child: Text('Upcoming')),
+                      DropdownMenuItem(
+                          value: 'Completed', child: Text('Completed')),
                     ],
                     onChanged: (val) {
                       if (val != null) setState(() => _status = val);
@@ -587,7 +611,8 @@ class _MeetingFormSheetState extends State<_MeetingFormSheet> {
               ),
               const SizedBox(height: 16),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.06),
                   borderRadius: BorderRadius.circular(12),
@@ -623,7 +648,8 @@ class _MeetingFormSheetState extends State<_MeetingFormSheet> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
-                    disabledBackgroundColor: AppColors.secondary.withOpacity(0.4),
+                    disabledBackgroundColor:
+                        AppColors.secondary.withOpacity(0.4),
                   ),
                   child: _isSaving
                       ? const SizedBox(
@@ -678,10 +704,12 @@ class _MeetingFormSheetState extends State<_MeetingFormSheet> {
           cursorColor: AppColors.secondary,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: GoogleFonts.plusJakartaSans(color: Colors.white30, fontSize: 13),
+            hintStyle: GoogleFonts.plusJakartaSans(
+                color: Colors.white30, fontSize: 13),
             filled: true,
             fillColor: Colors.white.withOpacity(0.06),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Colors.white12),
@@ -692,7 +720,8 @@ class _MeetingFormSheetState extends State<_MeetingFormSheet> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.secondary, width: 1.5),
+              borderSide:
+                  const BorderSide(color: AppColors.secondary, width: 1.5),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -702,7 +731,8 @@ class _MeetingFormSheetState extends State<_MeetingFormSheet> {
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
             ),
-            errorStyle: GoogleFonts.plusJakartaSans(color: Colors.redAccent, fontSize: 11),
+            errorStyle: GoogleFonts.plusJakartaSans(
+                color: Colors.redAccent, fontSize: 11),
           ),
         ),
       ],

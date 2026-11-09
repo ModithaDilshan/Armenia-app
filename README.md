@@ -1,16 +1,16 @@
-# armenia_lanka_edu
+# Study Armenia LK
 
-A new Flutter project.
+Flutter/Firebase application for Sri Lankan students applying to universities in Armenia, their linked parents or guardians, and consultancy administrators.
 
-## Getting Started
+## Local setup
 
-This project is a starting point for a Flutter application.
+```bash
+flutter pub get
+flutter analyze
+flutter test
+flutter run
+```
 
-A few resources to get you started if this is your first Flutter project:
+Firebase configuration is already present for Android. Before production, deploy the included Firestore/Storage rules and notification function, create an administrator role in a trusted environment, and configure Android release signing.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+See [PROJECT_DOCUMENTATION.md](PROJECT_DOCUMENTATION.md) for architecture, roles, Firebase schema, security, push notification deployment, and release instructions.
